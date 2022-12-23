@@ -1,0 +1,249 @@
+import GameScreen from './../base/screens/gameScreen.js'
+import BaseSprite from './../base/baseSprite.js'
+import CardManager from './../base/cardManager'
+import ScenePositionerVertical from './../base/scenePositionerVertical'
+import ScenePositionerHorizontal from './../base/scenePositionerHorizontal'
+
+
+// основной класс игры
+export default class MainScreen extends GameScreen{
+		
+    constructor(bgImg, game, width = 800, height = 600){
+        super();
+        
+        
+        this.basket = [];
+        this.width = width;
+        this.height = height;
+        this.game = game;
+        this.game.minutes = game.settings['minutes'];
+        this.bg = bgImg;
+        this.cardManager = new CardManager();    
+        
+    }
+
+    initScene(){
+
+        this.initSounds(); 
+        this.setTimer(); 
+        this.prepareRound();
+        
+        
+    }
+
+    initSounds(){
+
+        for (let i = 0; i <= 12; i++) {
+            this.sounds['digit-' + i] =  new Audio("/assets/snd/" + i + ".mp3");
+        }
+
+    }
+
+    prepareRound()
+    {
+        this.items = [];
+        let bg = new BaseSprite( this.game.settings['game_path']['img'] + this.bg,'bg','bg',0,0,this.width,this.height,' ');
+        
+        let btn = new BaseSprite(this.game.settings['game_path']['img'] + 'ui/update-btn.svg','update-btn','update',560,520,191,49,' ');
+ 
+        this.items.push(bg);
+        this.items.push(btn);
+        this.items.push(this.game.uiManager.ui.ok);
+        this.items.push(this.game.uiManager.ui.wrong);
+        this.items.push(this.game.uiManager.ui.coin);
+
+        this.count = this.game.helper.getRandomInt(1,15);
+        this.makeRows();
+        this.makeDigits();  
+    }
+
+    makeRows()
+    {
+        
+        let startX = 45; 
+        let startY = 70;
+        let offsetX = 100
+        let offsetY = 100
+        let countInRow = 5;
+
+        let scenePositioner = new ScenePositionerVertical(
+            startX, 
+            startY,
+            offsetX,
+            offsetY,
+            countInRow
+        );
+
+        let path = this.game.settings['game_path']['img']+ 'cards/sort-card-2.svg'; 
+        let tag = 'sort' 
+        let width = 180;
+        let height = 180;
+        let isDraggable = false; 
+        let numFrames = 3; 
+        let scale =  this.game.settings['scaleImg'];
+        
+
+        for(let i = 0; i < this.count;i++)
+        {
+            let coords = scenePositioner.getCoords(i);
+            let pos = this.game.helper.getRandomInt(0, numFrames - 1);
+            let card = this.cardManager.createCard(path, tag, i, width, height, isDraggable, numFrames, scale, pos);
+            card._x = coords.x;
+            card._y = coords.y;
+            this.items.push(card);
+            
+        }
+    }
+
+    makeDigits()
+    {
+        
+        let startX = 415; 
+        let startY = 220;
+        let offsetX = 70;
+        let offsetY = 90;
+        let countInRow = 5;
+
+        let scenePositioner = new ScenePositionerHorizontal(
+            startX, 
+            startY,
+            offsetX,
+            offsetY,
+            countInRow
+        );
+
+        let tag = 'digit' 
+        let width = 60;
+        let height = 80;
+        let isDraggable = false; 
+        let numFrames = 0; 
+        let scale =  1;
+        let count = 15;
+
+        for(let i = 0; i < count;i++)
+        {
+            
+            let coords = scenePositioner.getCoords(i);
+            let pos = this.game.helper.getRandomInt(0, numFrames - 1);
+            let card = this.cardManager.createCard(this.game.settings['game_path']['img']+ 'cards/c-' + (i+1) + '.svg', tag, i, width, height, isDraggable, numFrames, scale, pos);
+            card._x = coords.x;
+            card._y = coords.y;
+            card.value = parseInt(i+1);
+            this.items.push(card);
+            
+        }
+    }
+
+    
+    checkMouseClick(e){
+				
+        for(let i=0;i<this.items.length;i++){
+            
+            if(this.items[i].type == 'digit' && 
+                this.game.helper.isClick(e, this.items[i]) && 
+                this.items[i].isShow){
+                    
+                    if(this.items[i].value <= 12) {
+                        this.sounds['digit-' + this.items[i].value].play();
+                    }
+                    
+                    if(this.items[i].value === this.count){
+                        this.game.uiManager.right++;
+                        this.game.uiManager.points = parseInt((1.5 * this.game.uiManager.right) - (1.5 * this.game.uiManager.wrong));
+                        this.game.uiManager.tweens['ok'].play();
+						this.game.uiManager.tweens['ok'].restart();
+
+                        //this.game.uiManager.sounds['ok'].play();
+
+                        this.prepareRound();
+                        e.preventDefault();
+                        return;
+
+                    }else{
+                        this.game.uiManager.wrong++;
+                        this.game.uiManager.tweens['wrong'].play();
+						this.game.uiManager.tweens['wrong'].restart();
+                        //this.game.uiManager.sounds['wrong'].play();
+                       
+                    }
+
+            }
+
+            if(this.items[i].name == 'update-btn' && 
+                this.game.helper.isClick(e, this.items[i]) && 
+                this.items[i].isShow){
+                    this.prepareRound();
+                    //clearInterval(this.game.timerId);
+                    //this.game.showScreen(1,2);
+            }
+        }
+       
+    }
+
+    checkMouseUp(e){
+		        
+        for(var i=0;i<this.items.length;i++){
+
+            if(this.items[i].type == 'sort' && this.game.helper.isIntersect(this.items[i],this.items[1]) && this.items[i].isDraggable)
+            {
+                this.items[i].isAnimated = true;
+                
+            }
+        }
+       
+    }
+
+    // таймер
+    setTimer(){
+		
+        clearInterval(this.game.timerId);
+        
+        this.game.timerId = setInterval(() => {
+          
+        this.game.seconds--;
+      
+        if(this.game.minutes == 0 && this.game.seconds == 0) { 
+            this.game.showScreen(1,2); 
+            clearInterval(this.game.timerId);
+           
+        }
+      
+        if(this.game.seconds <= 0 && this.game.minutes > 0)
+        {
+            this.game.seconds = 59;
+              this.game.minutes--;
+        }
+    
+    }, 1000);
+        
+        
+    }
+
+    // цикл отрисовки
+    render(){
+			
+        this.game.ctx.fillStyle = "#111";
+        this.game.ctx.font = "20pt Arial";
+        this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
+        this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
+        this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
+        
+        if(this.game.seconds < 10)
+            {
+                this.seconds = '0' + this.game.seconds;
+            }else{
+                this.seconds = this.game.seconds
+            }
+            
+            if(this.game.minutes < 10)
+            {
+                this.minutes = '0' + this.game.minutes;
+            }else{
+                this.minutes = this.game.minutes;
+            }
+            
+            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 50, 50);
+        
+    }
+
+}

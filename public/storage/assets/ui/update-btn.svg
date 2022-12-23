@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="191"
+   height="48.852646"
+   viewBox="0 0 191 48.852646"
+   fill="none"
+   version="1.1"
+   id="svg17"
+   sodipodi:docname="update-btn.svg"
+   inkscape:version="1.1.2 (08b2f3d93c, 2022-04-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview19"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.8341969"
+     inkscape:cx="45.251412"
+     inkscape:cy="52.338983"
+     inkscape:window-width="1920"
+     inkscape:window-height="960"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g10" />
+  <g
+     clip-path="url(#clip0)"
+     id="g10"
+     transform="translate(-2,-0.3704479)">
+    <path
+       d="M 171.01041,0.3704479 H 24.702893 C 12.164465,0.3704479 2,7.2774135 2,15.797549 v 17.998445 c 0,8.520181 10.164465,15.427101 22.702893,15.427101 H 171.01041 c 12.53785,0 22.70262,-6.90692 22.70262,-15.427101 V 15.797549 c 0,-8.5201355 -10.16477,-15.4271011 -22.70262,-15.4271011 z"
+       fill="#239212"
+       id="path2"
+       style="fill:#2366ac;fill-opacity:1;stroke-width:0.966028" />
+    <path
+       d="M 164.89207,3.920457 H 30.331973 c -12.619662,0 -22.849829,7.35193 -22.849829,16.42103 v 9.1228 c 0,9.0691 10.230167,16.4211 22.849829,16.4211 H 164.89207 c 12.61896,0 22.8495,-7.352 22.8495,-16.4211 v -9.1228 c 0,-9.0691 -10.23054,-16.42103 -22.8495,-16.42103 z"
+       fill="#2aae16"
+       id="path4"
+       style="fill:#0080c4;fill-opacity:1;stroke-width:0.999879" />
+    <path
+       d="m 146.20232,13.269568 c 12.24608,0 22.17311,-0.8114 22.17311,-1.8123 0,-1.001 -9.92703,-1.8124 -22.17311,-1.8124 -12.24586,0 -22.17306,0.8114 -22.17306,1.8124 0,1.0009 9.9272,1.8123 22.17306,1.8123 z"
+       fill="#ffe6d5"
+       fill-opacity="0.47191"
+       id="path8"
+       style="stroke-width:0.655618" />
+  </g>
+  <defs
+     id="defs15">
+    <clipPath
+       id="clip0">
+      <rect
+         width="193"
+         height="52"
+         fill="#ffffff"
+         id="rect12"
+         x="0"
+         y="0" />
+    </clipPath>
+  </defs>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none"
+     x="39.732719"
+     y="32.870037"
+     id="text3995"><tspan
+       sodipodi:role="line"
+       id="tspan3993"
+       x="39.732719"
+       y="32.870037"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:monospace;fill:#ffffff">Обновить</tspan></text>
+</svg>
