@@ -18,7 +18,7 @@ import UIManager from "../base/UI/UIManager";
 
     game.settings['scaleImg'] = 0.5;
     game.settings['countImg'] = 10;
-    game.settings['minutes'] = 5;
+    game.settings['minutes'] = 2;
 
     let startScreen = new StartScreen('/start/start-bg.svg', game);
 	startScreen.isShow = true;

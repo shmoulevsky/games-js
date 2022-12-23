@@ -17,19 +17,36 @@ export default class MainScreen extends GameScreen{
         this.width = width;
         this.height = height;
         this.game = game;
+        this.game.isPaused = true;
         this.game.minutes = game.settings['minutes'];
         this.bg = bgImg;
         this.cardManager = new CardManager();    
-        this.textCardManager = new TextCardManager();    
+        this.textCardManager = new TextCardManager();
+        this.game.secondsShort = 12;
+
+        this.defaultCard = {};
+        this.defaultCard.tag = 'digit'
+        this.defaultCard.width = 70;
+        this.defaultCard.height = 70;
+        this.defaultCard.isDraggable = false;
+        this.defaultCard.canDrag = false;
+        this.defaultCard.canvasId = 'card-canvas';
+        this.defaultCard.fontStyle = {};
+        this.defaultCard.fontStyle.size = '40';
+        this.defaultCard.fontStyle.font = 'Arial';
+        this.defaultCard.fontStyle.color1 = 'black';
+        this.defaultCard.fontStyle.color2 = 'red';
+        this.defaultCard.fontStyle.x = 30;
+        this.defaultCard.fontStyle.xoffset = 10;
+        this.defaultCard.fontStyle.y = 50;
+
         
     }
 
     initScene(){
-
         this.setTimer(); 
         this.prepareRound();
-        
-        
+        this.game.isPaused = false;
     }
 
 
@@ -41,6 +58,7 @@ export default class MainScreen extends GameScreen{
         this.userResult = 0;
         this.digitPosition = 0;
         this.currentDigitPosition = 0;
+        this.game.secondsShort = 12;
 
         if(this.bg){
             let bg = new BaseSprite( this.game.settings['path']['img'] + this.bg,'bg','bg',0,0,this.width,this.height,' ');
@@ -54,39 +72,42 @@ export default class MainScreen extends GameScreen{
         this.items.push(this.game.uiManager.ui.wrong);
         this.items.push(this.game.uiManager.ui.coin);
 
-        this.count1 = this.game.helper.getRandomInt(1,12);
-        this.count2 = this.game.helper.getRandomInt(1,12);
+        this.count1 = this.game.helper.getRandomInt(1,6);
+        this.count2 = this.game.helper.getRandomInt(1,6);
         this.gameResult = this.count1 + this.count2;
         this.digitPosition = this.gameResult.toString().length;
 
         this.makeDigits();
+        clearInterval(this.game.timerShortId);
+
+        this.game.timerShortId = setInterval(() => {
+
+            if(!this.game.isPaused){
+                this.game.secondsShort--;
+            }
+
+            if(this.game.secondsShort === 0) {
+
+                clearInterval(this.game.timerShortId);
+                this.game.isPaused = true;
+
+                setTimeout(() => {
+                    this.prepareRound();
+                    this.game.isPaused = false;
+                }, 200);
+            }
+
+
+        }, 1000);
 
     }
 
-    makeDigits()
-    {
+    makeDigits(){
 
-        let tag = 'digit' 
-        let width = 70;
-        let height = 70;
-        let isDraggable = false; 
-        let canDrag = false; 
+        this.defaultCard.cardBg = new Image();
+        this.defaultCard.cardBg.src = this.game.settings['path']['img']+'/cards/card.svg';
 
-        let canvasId = 'card-canvas';
-
-        let fontStyle = {};
-        fontStyle.size = '40';
-        fontStyle.font = 'Arial';
-        fontStyle.color1 = 'black';
-        fontStyle.color2 = 'red';
-        fontStyle.x = 30;
-        fontStyle.xoffset = 10;
-        fontStyle.y = 50;
-
-        let cardBg = new Image();
-		cardBg.src = this.game.settings['path']['img']+'/cards/card.svg';
-
-        cardBg.onload = () => {
+        this.defaultCard.cardBg.onload = () => {
 
             let startCardX = 160;
             let startCardY = 340;
@@ -102,7 +123,20 @@ export default class MainScreen extends GameScreen{
 
 
             for(let key in cards){
-                let item = this.textCardManager.createCard(cardBg, canvasId, tag + '-card', cards[key].name, cards[key].value, 0, 0, width, height, isDraggable, canDrag, fontStyle);
+                let item = this.textCardManager.createCard(
+                    this.defaultCard.cardBg,
+                    this.defaultCard.canvasId,
+                    this.defaultCard.tag + '-card',
+                    cards[key].name,
+                    cards[key].value,
+                    0,
+                    0,
+                    this.defaultCard.width,
+                    this.defaultCard.height,
+                    this.defaultCard.isDraggable,
+                    this.defaultCard.canDrag,
+                    this.defaultCard.fontStyle
+                );
                 item._x = startCardX+(key*75);
                 item._y = startCardY;
                 item.value = cards[key].value;
@@ -115,7 +149,7 @@ export default class MainScreen extends GameScreen{
             }
 
             let startX = 30;
-            let startY = 90;
+            let startY = 120;
             let offsetX = 75;
             let offsetY = 80;
             let countInRow = 10;
@@ -132,7 +166,20 @@ export default class MainScreen extends GameScreen{
             for(let i = 0; i < 10;i++)
             {
                 let coords = scenePositioner.getCoords(i);
-                let card = this.textCardManager.createCard(cardBg, canvasId, tag, i, i , 0, 0, width, height, isDraggable, canDrag, fontStyle);
+                let card = this.textCardManager.createCard(
+                    this.defaultCard.cardBg,
+                    this.defaultCard.canvasId,
+                    this.defaultCard.tag,
+                    i,
+                    i ,
+                    0,
+                    0,
+                    this.defaultCard.width,
+                    this.defaultCard.height,
+                    this.defaultCard.isDraggable,
+                    this.defaultCard.canDrag,
+                    this.defaultCard.fontStyle
+                );
                 card._x = coords.x;
                 card._y = coords.y;
                 card.value = parseInt(i);
@@ -157,19 +204,24 @@ export default class MainScreen extends GameScreen{
                 this.items[i].isShow){
 
                 let item = this.textCardManager.createCard(
-                    item.bg,
-                    canvasId,
-                    tag + '-card',
-                    cards[key].name,
-                    cards[key].value, 0, 0,
-                    width,
-                    height,
-                    isDraggable,
-                    canDrag,
-                    fontStyle);
+                    this.defaultCard.cardBg,
+                    this.defaultCard.canvasId,
+                    'result-card',
+                    'result-card',
+                    this.items[i].value,
+                    460+(75*this.currentDigitPosition),
+                    340,
+                    this.defaultCard.width,
+                    this.defaultCard.height,
+                    this.defaultCard.isDraggable,
+                    this.defaultCard.canDrag,
+                    this.defaultCard.fontStyle
+                );
 
-                this.items[i]._x = 460+(this.currentDigitPosition*75);
-                this.items[i]._y = 340;
+                if(this.currentDigitPosition === 2) continue;
+
+                this.items.push(item);
+
 
                 this.userResult = parseInt((this.userResult).toString() + (this.items[i].value).toString());
                 this.currentDigitPosition++;
@@ -195,6 +247,11 @@ export default class MainScreen extends GameScreen{
                         this.game.uiManager.tweens['wrong'].play();
 						this.game.uiManager.tweens['wrong'].restart();
                         this.game.uiManager.sounds['wrong'].play();
+
+                        setTimeout(() => {
+                            this.prepareRound()
+                        }, 1000);
+
                        
                     }
 
@@ -229,9 +286,11 @@ export default class MainScreen extends GameScreen{
         clearInterval(this.game.timerId);
         
         this.game.timerId = setInterval(() => {
-          
-        this.game.seconds--;
-      
+
+        if(!this.game.isPaused){
+            this.game.seconds--;
+        }
+
         if(this.game.minutes === 0 && this.game.seconds === 0) {
             this.game.showScreen(1,2); 
             clearInterval(this.game.timerId);
@@ -257,7 +316,9 @@ export default class MainScreen extends GameScreen{
         this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
         this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
         this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
-        
+        this.game.ctx.fillStyle = '#FF0000';
+        this.game.ctx.fillRect(0, 0, 800 - ((800 / 12) * this.game.secondsShort), 10);
+
         if(this.game.seconds < 10)
             {
                 this.seconds = '0' + this.game.seconds;

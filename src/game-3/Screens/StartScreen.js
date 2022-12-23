@@ -39,6 +39,10 @@ export default class StartScreen extends GameScreen{
         
     }
 
+    checkMouseMove(e){
+
+    }
+
     checkMouseClick(e){
 		
         if(typeof(e) == 'undefined') return;
