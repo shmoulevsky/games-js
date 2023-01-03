@@ -7,7 +7,23 @@ export default class ScenePositionerHorizontal{
         offsetY,
         countInRow
     ) {
-        
+        this.init(
+            startX,
+            startY,
+            offsetX,
+            offsetY,
+            countInRow
+        );
+      }
+
+    init(
+        startX,
+        startY,
+        offsetX,
+        offsetY,
+        countInRow
+    ) {
+
         this.counter = 0;
         this.startX = startX;
         this.startY = startY;
@@ -16,7 +32,7 @@ export default class ScenePositionerHorizontal{
         this.offset = 0;
         this.countInRow = countInRow;
 
-      }
+    }
 
     getCoords(num){
 

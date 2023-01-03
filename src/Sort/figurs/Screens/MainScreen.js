@@ -21,11 +21,9 @@ export default class MainScreen extends GameScreen{
         this.textCardManager = new TextCardManager();
         this.defaultCard = new DefaultCard();
         this.cardManager = new CardManager();
+        this.game.settings.figCount = 3;
 
-        this.game.settings.countImg = 4;
-        this.game.settings.coords = [];
-        this.game.settings.coords = [[50,480],[660,480],[355,480]];
-        this.isAnimation = false;
+
     }
 
     initScene(){
@@ -33,42 +31,6 @@ export default class MainScreen extends GameScreen{
         this.setTimer();
         this.prepareRound();
         this.game.isPaused = false;
-
-        window.onkeydown = (e) => {
-
-            if (e.repeat) { return }
-            if(this.isAnimation) return;
-
-            let pos = 2;
-            this.isAnimation = true;
-
-            if(e.key === 'ArrowLeft') {
-                pos = 0;
-            }
-
-            if(e.key === 'ArrowRight') {
-                pos = 1;
-            }
-
-            if(e.key === 'ArrowDown') {
-                pos = 2;
-            }
-
-            if(pos === this.game.settings.curImg){
-                this.checkResult(true);
-            }else{
-                this.checkResult(false);
-            }
-
-            gsap.to( this.items[this.game.settings['lastImg']], 0.5,
-                { _x : this.game.settings['coords'][pos][0],
-                    _y : this.game.settings['coords'][pos][1] ,
-                    repeat: 0,
-                    onComplete: this.moveNext(this)
-                });
-
-
-        };
 
     }
 
@@ -93,51 +55,42 @@ export default class MainScreen extends GameScreen{
 
     makeCards(){
 
-        for(let i = 0;i < this.game.settings.countImg;i++)
-        {
-            let card = new Card(this.game.settings.path.img + 'cards/sort-card-2.svg','sort-' + i,'sort', 0, 0, 180, 180,' ' , false, false, 3);
+        let q = 0.7;
 
-            card.scale = this.game.settings.scaleImg;
-            card.pos = this.game.helper.getRandomInt(0,2);
-            card._x = 400 - ((card._width * this.game.settings.scaleImg) / 2);
-            card._y = 20*(i*2.5) + 120;
+        for(let i = 1;i <= 3;i++) {
+            let house = new BaseSprite(this.game.settings.path.img + 'basket/house-'+i+'.svg','house-'+i,'house',240 * (i-1) + 80,120,220 ,379 , i);
 
-            this.items.push(card);
-            this.game.settings.curImg = card.pos;
-            this.game.settings.lastImg = 5;
+            house._iwidth *= q;
+            house._iheight *= q;
+            house.scale = q;
+
+            this.items.push(house);
+            this.basket.push(house);
+
         }
 
-
-        for(let i = 0;i <= 2;i++)
-        {
-            let value = i;
-            let card = new Card(this.game.settings.path.img + 'cards/sort-card-2.svg','answer-' + i,'answer', this.game.settings.coords[i][0], this.game.settings.coords[i][1],180,180, value, false, false, 3);
-            card.scale = 0.5;
-            card.pos = value;
-            this.items.push(card);
+        for(let i = 0;i < this.game.settings.figCount * 3;i++) {
+            let fig = new Card( this.game.settings.path.img + 'cards/fig-'+(i % 3 + 1)+'.svg','fig-' + i, 'fig', 0, 0,70,100, i % 3 + 1, false, true);
+            this.items.push(fig);
         }
 
-        console.log(this.items);
+        this.restart();
 
     }
 
-    moveNext(scene){
+    restart(){
 
-        let indexOffset = 3;
-        scene.items[3].pos = scene.game.helper.getRandomInt(0,2); // first
-        scene.game.helper.arrayMoveTo(
-            scene.items,
-            6, // last sort
-            3 // first sort
-        );
+        for(let i = 0;i < this.items.length;i++)
+        {
+            if(this.items[i].type === 'fig')
+            {
+                this.items[i].isShow = true;
+                this.items[i]._x = this.game.helper.getRandomInt(50, 750);
+                this.items[i]._y = this.game.helper.getRandomInt(390, 500);
+            }
 
-        for(let i = 0;i < this.game.settings.countImg;i++){
-            scene.items[i + indexOffset]._x = 400 - ((scene.items[i + indexOffset]._width *  scene.game.settings.scaleImg) / 2);
-            scene.items[i + indexOffset]._y = 20*(i*2.5) + 120;
-            scene.game.settings.curImg = this.items[5].pos;
         }
 
-        scene.isAnimation = false;
 
     }
 
@@ -166,14 +119,36 @@ export default class MainScreen extends GameScreen{
 
     checkMouseUp(e){
 
-        for(let i=0;i<this.items.length;i++){
-            if(this.items[i].type === 'card'
-                && this.game.helper.isIntersect(this.items[i],this.items[1])
-                && this.items[i].isShow){
-                    this.checkResult(this.items[i])
+        for(let i=0;i<this.items.length;i++)
+        {
+            for(let j=0;j<this.basket.length;j++)
+            {
+                if(this.items[i].type === 'fig' && this.game.helper.isIntersect(this.items[i],this.basket[j]) && this.items[i].isShow)
+                {
+
+                    if(this.items[i].value === this.basket[j].value){
+
+                        this.game.uiManager.right++;
+                        this.game.uiManager.points = parseInt((1.5 * this.game.uiManager.right) - (1.5 * this.game.uiManager.wrong));
+                        this.game.uiManager.tweens['ok'].play();
+                        this.game.uiManager.tweens['ok'].restart();
+
+                        if(parseInt(this.game.uiManager.right) + parseInt(this.game.uiManager.wrong) >= this.game.settings.figCount*3)
+                        {
+                            this.game.showScreen(1,2);
+                            clearInterval(this.game.timerId);
+                        }
+
+                    }else{
+                        this.game.uiManager.wrong++;
+                    }
+
+                    this.items[i].isShow = false;
+
+                }
             }
         }
-       
+
     }
 
     // таймер

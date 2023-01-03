@@ -43,7 +43,7 @@ export default class MainScreen extends GameScreen{
         this.userResult = 0;
         this.digitPosition = 0;
         this.currentDigitPosition = 0;
-        this.game.secondsShort = this.game.settings.time.short;
+        this.game.secondsShort = this.game.settings.time.short * 10;
 
         if(this.bg){
             let bg = new BaseSprite( this.game.settings.path.img + this.bg,'bg','bg',0,0,this.width,this.height,' ');
@@ -86,7 +86,7 @@ export default class MainScreen extends GameScreen{
             }
 
 
-        }, 1000);
+        }, 100);
 
     }
 
@@ -115,10 +115,6 @@ export default class MainScreen extends GameScreen{
             this.game.settings.path.img + 'cards/denesh/'+size[this.currentSize]+'.svg','bg','bg',
             230,100,
             120,120,' ');
-
-        colorCard.scale = 0.65;
-        shapeCard.scale = 0.65;
-        sizeCard.scale = 0.65;
 
         this.items.push(colorCard);
         this.items.push(shapeCard);
@@ -251,7 +247,8 @@ export default class MainScreen extends GameScreen{
         this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
         this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
         this.game.ctx.fillStyle = '#FF0000';
-        this.game.ctx.fillRect(0, 0, 800 - ((800 / this.game.settings.time.short) * this.game.secondsShort), 10);
+        let width = 800 - ((800 / this.game.settings.time.short) * this.game.secondsShort) / 10;
+        this.game.ctx.fillRect(0, 0, width, 10);
 
         if(this.game.seconds < 10)
             {
