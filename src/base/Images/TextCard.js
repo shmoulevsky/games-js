@@ -52,6 +52,11 @@ export default class TextCard extends Card{
     ctx.fillStyle = fontStyle.color2;
     ctx.drawImage(bg, this._width, 0, this._width, this._height);
     ctx.fillText( this.value , x + this._width, fontStyle.y);
+
+    ctx.fillStyle = fontStyle.color3;
+    ctx.drawImage(bg, this._width*2, 0, this._width, this._height);
+    ctx.fillText( this.value , x + this._width*2, fontStyle.y);
+
   }
   
   this.src = canvas.toDataURL("image/png", 1.0);

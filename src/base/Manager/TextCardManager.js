@@ -6,7 +6,7 @@ export default class CardManager{
     {
     
         let name = tag + '-' + i;
-        let card = new TextCard('', name , tag, x , y , width, height, value, isDraggable, canDrag, canvasId, cardBg, 2, fontStyle);
+        let card = new TextCard('', name , tag, x , y , width, height, value, isDraggable, canDrag, canvasId, cardBg, 3, fontStyle);
         
         return card;
     }

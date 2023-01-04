@@ -12,6 +12,7 @@ export default class DefaultCard{
         this.fontStyle.font = 'Arial';
         this.fontStyle.color1 = 'black';
         this.fontStyle.color2 = 'red';
+        this.fontStyle.color3 = 'green';
         this.fontStyle.x = 30;
         this.fontStyle.xoffset = 10;
         this.fontStyle.y = 50;

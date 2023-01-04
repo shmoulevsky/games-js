@@ -163,6 +163,8 @@ export default class MainScreen extends GameScreen{
 
     checkMouseClick(e){
 
+        if(this.game.settings.hide_cards === false) return;
+
         let isBreak = false;
 
         for(let i=0;i<this.items.length;i++)
