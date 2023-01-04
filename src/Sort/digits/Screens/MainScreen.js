@@ -2,10 +2,8 @@ import GameScreen from './../../../base/Screens/GameScreen'
 import BaseSprite from './../../../base/Images/BaseSprite'
 import CardManager from './../../../base/Manager/CardManager'
 import TextCardManager from './../../../base/Manager/TextCardManager'
-import DefaultCard from "../../../base/Cards/DefaultCard";
-import Card from "../../../base/Images/Card";
-import gsap from "gsap";
-import TextCard from "../../../base/Images/TextCard";
+import TextSimpleCard from "../../../base/Images/TextSimpleCard";
+import DefaultSimpleCard from "../../../base/Cards/DefaultSimpleCard";
 
 // основной класс игры
 export default class MainScreen extends GameScreen{
@@ -20,7 +18,7 @@ export default class MainScreen extends GameScreen{
         this.bg = bgImg;
         this.cardManager = new CardManager();    
         this.textCardManager = new TextCardManager();
-        this.defaultCard = new DefaultCard();
+        this.defaultSimpleCard = new DefaultSimpleCard();
         this.cardManager = new CardManager();
         this.game.settings.count = 15;
 
@@ -39,13 +37,26 @@ export default class MainScreen extends GameScreen{
     prepareRound()
     {
         this.items = [];
+        this.currentResultCount = 0;
 
         if(this.bg){
             let bg = new BaseSprite( this.game.settings.path.img + this.bg,'bg','bg',0,0,this.width,this.height,' ');
             this.items.push(bg);
         }
 
+        let btn = new BaseSprite(this.game.settings.path.img + 'ui/update-btn-short.svg',
+            'update-btn','update',730,533,50,49,' ');
+        this.items.push(btn);
 
+        this.currentDigit = this.game.helper.getRandomInt(2, 18);
+
+        this.basket = new BaseSprite(this.game.settings.path.img + 'basket/house-simple.svg',
+            'basket','basket',60,160,165,260,this.currentDigit);
+
+        this.basket.scale = 1;
+        this.basket.value = this.currentDigit;
+
+        this.items.push(this.basket);
         this.items.push(this.game.uiManager.ui.ok);
         this.items.push(this.game.uiManager.ui.wrong);
         this.items.push(this.game.uiManager.ui.coin);
@@ -56,28 +67,77 @@ export default class MainScreen extends GameScreen{
 
     makeCards(){
 
+        this.defaultSimpleCard.style.offsetX = 10;
+        this.defaultSimpleCard.style.offsetY = 40;
+        let arCards = [];
 
+        for (let i=0; i <= this.currentDigit; i++) {
 
-        for(let i = 0;i < this.game.settings.count;i++) {
-            let card = new TextCard( this.game.settings.path.img + 'cards/fig-'+(i % 3 + 1)+'.svg','fig-' + i, 'fig', 0, 0,70,100, i % 3 + 1, false, true);
-            this.items.push(card);
+            let first = i;
+            let second = this.currentDigit-i;
+
+            arCards.push({
+                text : first.toString()+'+'+second.toString()+'=?',
+                value : parseInt(first)+parseInt(second),
+            });
+
+            arCards.push({
+                text : second.toString()+'+'+first.toString()+'=?',
+                value : parseInt(first)+parseInt(second),
+            });
+
         }
 
-        this.restart();
+        arCards = this.game.helper.shuffle(arCards);
+        this.currentCount =  this.game.helper.getRandomInt(0, arCards.length);
 
-    }
+        let items = []
 
-    restart(){
+        for (let i=0; i <= this.game.settings.count; i++) {
 
-        for(let i = 0;i < this.items.length;i++)
-        {
-            if(this.items[i].type === 'fig')
-            {
-                this.items[i].isShow = true;
-                this.items[i]._x = this.game.helper.getRandomInt(50, 750);
-                this.items[i]._y = this.game.helper.getRandomInt(390, 500);
-            }
+            let first = this.game.helper.getRandomInt(0, 9);
+            let second = this.game.helper.getRandomInt(0, 9);
 
+            let item = new TextSimpleCard(
+                'card-'+ i,
+                'card',
+                this.game.helper.getRandomInt(290, 650),
+                this.game.helper.getRandomInt(80, 500) ,
+                150,
+                50,
+                first.toString()+'+'+second.toString()+'=?',
+                parseInt(first)+parseInt(second),
+                false,
+                true ,
+                this.defaultSimpleCard.style
+            );
+
+            items.push(item);
+        }
+
+        for (let i=0; i < this.currentCount; i++) {
+
+            let item = new TextSimpleCard(
+                'card-'+ i,
+                'card',
+                this.game.helper.getRandomInt(290, 650),
+                this.game.helper.getRandomInt(80, 500) ,
+                150,
+                50,
+                arCards[i].text,
+                arCards[i].value,
+                false,
+                true ,
+                this.defaultSimpleCard.style
+            );
+
+            items.push(item);
+        }
+
+        items = this.game.helper.shuffle(items);
+
+        for (const key in items) {
+            this.items.push(items[key]);
         }
 
 
@@ -110,32 +170,33 @@ export default class MainScreen extends GameScreen{
 
         for(let i=0;i<this.items.length;i++)
         {
-            for(let j=0;j<this.basket.length;j++)
+
+            if(this.items[i].type === 'card' && this.game.helper.isIntersect(this.items[i],this.basket) && this.items[i].isShow)
             {
-                if(this.items[i].type === 'fig' && this.game.helper.isIntersect(this.items[i],this.basket[j]) && this.items[i].isShow)
-                {
 
-                    if(this.items[i].value === this.basket[j].value){
+                if(this.items[i].value === this.basket.value){
 
-                        this.game.uiManager.right++;
-                        this.game.uiManager.points = parseInt((1.5 * this.game.uiManager.right) - (1.5 * this.game.uiManager.wrong));
-                        this.game.uiManager.tweens['ok'].play();
-                        this.game.uiManager.tweens['ok'].restart();
+                    this.game.uiManager.right++;
+                    this.currentResultCount++;
+                    this.game.uiManager.points = parseInt((1.5 * this.game.uiManager.right) - (1.5 * this.game.uiManager.wrong));
+                    this.game.uiManager.tweens['ok'].play();
+                    this.game.uiManager.tweens['ok'].restart();
 
-                        if(parseInt(this.game.uiManager.right) + parseInt(this.game.uiManager.wrong) >= this.game.settings.figCount*3)
-                        {
-                            this.game.showScreen(1,2);
-                            clearInterval(this.game.timerId);
-                        }
-
-                    }else{
-                        this.game.uiManager.wrong++;
+                    if(this.currentCount === this.currentResultCount){
+                        setTimeout(() => {
+                            this.prepareRound()
+                        }, 1000);
                     }
 
-                    this.items[i].isShow = false;
 
+                }else{
+                    this.game.uiManager.wrong++;
                 }
+
+                this.items[i].isShow = false;
+
             }
+
         }
 
     }
@@ -178,6 +239,13 @@ export default class MainScreen extends GameScreen{
         this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
         this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
         this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
+        this.game.ctx.fillText(this.currentResultCount + '/' +this.currentCount , 120, 50);
+        this.game.ctx.font = "40pt Arial";
+
+        let offsetX = this.currentDigit <= 9 ? 120 : 101;
+
+        this.game.ctx.fillText(this.currentDigit , offsetX, 240);
+        this.game.ctx.font = "20pt Arial";
 
         if(this.game.seconds < 10)
             {
