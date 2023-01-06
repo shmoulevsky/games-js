@@ -28,6 +28,8 @@ module.exports = {
     'js/games/series/find/bundle' : './src/Series/find/main.js',
     'js/games/series/digits/bundle' : './src/Series/digits/main.js',
     'js/games/count/simple/bundle' : './src/Count/simple/main.js',
+    'js/games/find-all/letters/bundle' : './src/FindAll/letters/main.js',
+    'js/games/memory/pair/bundle' : './src/Memory/pair/main.js',
   },
   output: {
     path: path.resolve(__dirname, 'public'),
