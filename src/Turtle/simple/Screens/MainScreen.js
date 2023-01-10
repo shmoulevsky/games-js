@@ -18,139 +18,145 @@ export default class MainScreen extends GameScreen{
         this.game = game;
         this.game.isPaused = false;
         this.bg = bgImg;
-        this.cardManager = new CardManager();    
-        this.textCardManager = new TextCardManager();
-        this.defaultCard = new DefaultCard();
         this.cardManager = new CardManager();
-
-        this.game.settings.fieldSize = 6;
-        this.game.settings.secondsLeft = 10;
+        this.game.settings.cellSize = 60;
 
     }
 
     initScene(){
         this.setTimer();
         this.prepareRound();
-    }
 
+        window.onkeydown = (e) => {
+
+            if (e.repeat) { return }
+
+            let dir = -1;
+
+            if(e.key === 'ArrowUp') {
+                dir = 0;
+            }
+
+            if(e.key === 'ArrowDown') {
+                dir = 1;
+            }
+
+            if(e.key === 'ArrowLeft') {
+                dir = 2;
+            }
+
+            if(e.key === 'ArrowRight') {
+                dir = 3;
+            }
+
+            this.path.items[this.currentStep].pos = dir;
+            this.path.items[this.currentStep].value = dir;
+            this.currentStep++;
+
+        }
+
+    }
 
     prepareRound()
     {
         this.items = [];
+        this.currentStep = 0;
+        this.isAnimation = false;
+
+        this.field = {
+            sizeX : 6,
+            sizeY : 6,
+            items : []
+        }
+
+        this.path = {
+            items : [],
+            userItems : [],
+            values : [],
+            selection : {x : 30, y : 480}
+        };
+
+        this.finish = null;
+        this.hero = null;
 
         if(this.bg){
             let bg = new BaseSprite( this.game.settings.path.img + this.bg,'bg','bg',0,0,this.width,this.height,' ');
             this.items.push(bg);
         }
 
+        let btn = new BaseSprite(this.game.settings.path.img + 'ui/update-btn-short.svg',
+            'update-btn','update',730,533,50,49,' ');
+        this.items.push(btn);
+
         this.items.push(this.game.uiManager.ui.ok);
         this.items.push(this.game.uiManager.ui.wrong);
         this.items.push(this.game.uiManager.ui.coin);
-        this.makeCards();
+        this.makeField();
+        this.makePath();
 
+        this.heroX = this.game.helper.getRandomInt(0,5);
+        this.heroY = this.game.helper.getRandomInt(0,5);
+        this.finishX = this.heroX;
+
+        while (this.heroX === this.finishX){
+            this.finishX = this.game.helper.getRandomInt(0,5);
+            this.finishY = this.game.helper.getRandomInt(0,5);
+        }
+
+        this.finish = this.makeCell('finish', 3, this.finishX, this.finishY);
+        this.hero = this.makeCell('hero', 1, this.heroX, this.heroY);
 
     }
 
-    makeCards() {
-
-        this.count = Math.pow(this.game.settings.fieldSize, 2);
-        this.pairCount = 5;
-        this.cards = [];
-        this.field = [];
-        this.heroPath = [];
-        this.selectedItems = [];
-
-        for (let i = 0; i < this.count; i++) {
-            if (i >= this.pairCount) {
-                this.field.push(0);
-            } else {
-                this.field.push(2);
-            }
-
-        }
-
-        this.field = this.game.helper.shuffle(this.field);
-
-        let startX = 30;
-        let startY = 80;
-        let offsetX = 61;
-        let offsetY = 61;
-        let countInRow = this.game.settings.fieldSize;
-
-        let scenePositioner = new ScenePositionerHorizontal(
-            startX,
-            startY,
-            offsetX,
-            offsetY,
-            countInRow
-        );
-
-        for (let i = 0; i < this.count; i++) {
-
-                let coords = scenePositioner.getCoords(i);
-
+    makeField(){
+        for (let i = 0; i < this.field.sizeX; i++) {
+            for (let j = 0; j < this.field.sizeY; j++) {
                 let card = new Card(
                     this.game.settings.path.img + 'games/turtle/cards.svg',
                     'field',
                     'field-'+i,
-                    coords.x,
-                    coords.y,
-                    60,
-                    60,
-                    this.field[i],
+                    i*(this.game.settings.cellSize + 1) + 30,
+                    j*(this.game.settings.cellSize + 1) + 80,
+                    this.game.settings.cellSize,
+                    this.game.settings.cellSize,
+                    i+j,
                     false,
                     false,
                     4
-                    );
-
-                card.pos = this.field[i];
-
-                if(this.field[i] === 1){
-                    this.hero = card;
-                }
-
+                );
+                card.positionX = i;
+                card.positionY = j;
+                this.field.items.push(card);
                 this.items.push(card);
+            }
         }
+    }
 
-        let finish = new Card(
+    makeCell(name, pos, positionX, positionY){
+
+        let cell = new Card(
             this.game.settings.path.img + 'games/turtle/cards.svg',
-            'finish',
-            'finish',
-            30+(5*61),
-            80+(5*61),
-            60,
-            60,
+            name,
+            pos,
+            positionX * (this.game.settings.cellSize + 1) + 30,
+            positionY * (this.game.settings.cellSize + 1) + 80,
+            this.game.settings.cellSize,
+            this.game.settings.cellSize,
             1,
             false,
             false,
             4
         );
-        finish.pos = 3;
-        this.finish = finish;
-        this.items.push(finish);
+        cell.pos = pos;
+        cell.positionX = positionX;
+        cell.positionY = positionY;
+        this.items.push(cell);
+        return cell;
+    }
 
-        let hero = new Card(
-            this.game.settings.path.img + 'games/turtle/cards.svg',
-            'hero',
-            'hero',
-            30,
-            80,
-            60,
-            60,
-            1,
-            false,
-            false,
-            4
-        );
-        hero.pos = 1;
-        hero.positionX = 0;
-        hero.positionY = 0;
+    makePath() {
 
-        this.hero = hero;
-        this.items.push(hero);
-
-
-        scenePositioner.init(30, 476,56,56,4);
+        let scenePositioner = new ScenePositionerHorizontal(430, 80,56,56,4);
 
         for (let i = 0; i < 4; i++) {
 
@@ -161,26 +167,24 @@ export default class MainScreen extends GameScreen{
                 'arrow',
                 coords.x,
                 coords.y,
-                60,
-                60,
+                this.game.settings.cellSize,
+                this.game.settings.cellSize,
                 i,
                 false,
-                true,
+                false,
                 5
             );
 
             card.pos = i;
-            card.isCopy = false;
             card.setScale(0.75);
             this.items.push(card);
         }
 
-        scenePositioner.init(30, 532,56,56,24);
-        this.path = [];
+        scenePositioner.init(30, 480,56,56,12);
 
-        let countUserSteps = 12;
+        let countUserSteps = 24;
 
-        for (let i = 0; i <= countUserSteps; i++) {
+        for (let i = 0; i <countUserSteps; i++) {
 
             let coords = scenePositioner.getCoords(i);
             let card = new Card(
@@ -189,9 +193,9 @@ export default class MainScreen extends GameScreen{
                 'path',
                 coords.x,
                 coords.y,
-                60,
-                60,
-                i,
+                this.game.settings.cellSize,
+                this.game.settings.cellSize,
+                '',
                 false,
                 false,
                 6
@@ -200,18 +204,46 @@ export default class MainScreen extends GameScreen{
             card.pos = 4;
             card.setScale(0.75);
 
-            if(i === countUserSteps){
-                card.pos = 5;
-                card.type = 'play';
-            }
-
-            this.path.push(card);
+            this.path.items.push(card);
             this.items.push(card);
-            this.heroPath.push('');
+
         }
 
+        let card = new Card(
+            this.game.settings.path.img + 'games/turtle/arrows.svg',
+            'play',
+            'play',
+            (11*56)+38,
+            80,
+            this.game.settings.cellSize,
+            this.game.settings.cellSize,
+            '',
+            false,
+            false,
+            7
+        );
 
+        card.pos = 5;
+        card.setScale(0.75);
+        this.items.push(card);
 
+        let clear = new Card(
+            this.game.settings.path.img + 'games/turtle/arrows.svg',
+            'clear',
+            'clear',
+            (12*56)+38,
+            80,
+            this.game.settings.cellSize,
+            this.game.settings.cellSize,
+            '',
+            false,
+            false,
+            7
+        );
+
+        clear.pos = 6;
+        clear.setScale(0.75);
+        this.items.push(clear);
 
     }
 
@@ -228,29 +260,38 @@ export default class MainScreen extends GameScreen{
         let positionX = 0;
         let positionY = 0;
 
-        function handlePath(hero, path) {
-            if(path[index] === '') {
+        function handlePath(hero, path, finish, context) {
+            if(path[index].value === '') {
                 setTimeout(() => {
-                    hero._x = 30;
-                    hero._y = 80;
-                    hero.positionX = 0;
-                    hero.positionY = 0;
+                    hero._x = (context.heroX * 61) + 30;
+                    hero._y = (context.heroY * 61) + 80;
+                    hero.positionX = context.heroX;
+                    hero.positionY = context.heroY;
+                    context.path.selection.x = 30;
+                    context.path.selection.y = 480;
+                    context.isAnimation = false;
                 }, 1000)
 
                 return;
             }
 
-            moveHero(path[index], hero)
+            context.path.selection.x = path[index]._x;
+            context.path.selection.y = path[index]._y;
+
+            moveHero(path[index].value, hero, finish, context)
+
+
             index++
-            if(index < 15) {
+            if(index < 24) {
                 setTimeout(() => {
-                    handlePath(hero, path);
+                    handlePath(hero, path, finish, context);
                 }, 500)
+            }else{
+                context.isAnimation = false;
             }
         }
 
-        function moveHero(direction, hero){
-
+        function moveHero(direction, hero, finish, context){
             switch (direction){
                 case 0 :
                     ySpeed =-61;
@@ -279,17 +320,32 @@ export default class MainScreen extends GameScreen{
                 case '' :  break;
             }
 
-            hero.positionX += positionX;
-            hero.positionY += positionY;
+            if((hero.positionX>0 || direction === 3) && (hero.positionX<5 || direction === 2)){
+                hero.positionX += positionX;
+                hero._x += xSpeed;
+            }
 
-            console.log(hero.positionX, hero.positionY);
+            if((hero.positionY>0 || direction === 1) && (hero.positionY<5 || direction === 0)){
+                hero.positionY += positionY;
+                hero._y += ySpeed;
+            }
 
-            hero._x += xSpeed;
-            hero._y += ySpeed;
+
+            if(hero.positionX === finish.positionX && hero.positionY === finish.positionY){
+                context.game.uiManager.right++;
+                context.game.uiManager.points = parseInt((1.5 * context.game.uiManager.right) - (1.5 * context.game.uiManager.wrong));
+                context.game.uiManager.tweens['ok'].play();
+                context.game.uiManager.tweens['ok'].restart();
+
+                setTimeout(() => {
+                    context.prepareRound();
+                }, 900)
+
+            }
 
         }
 
-        handlePath(this.hero, this.heroPath);
+        handlePath(this.hero, this.path.items, this.finish, this);
 
     }
 
@@ -297,37 +353,28 @@ export default class MainScreen extends GameScreen{
 
         for(let i=0;i<this.items.length;i++){
 
-            if(this.items[i].type === 'play' && this.game.helper.isClick(e, this.items[i])){
+            if(this.items[i].type === 'play' && this.game.helper.isClick(e, this.items[i]) && this.isAnimation === false){
+                this.isAnimation = true;
                 this.play(this.items[i]);
             }
 
+            if(this.items[i].type === 'clear' && this.game.helper.isClick(e, this.items[i]) && this.isAnimation === false){
+                for (let key in this.path.items) {
+                    this.path.items[key].pos = 4;
+                    this.path.items[key].value = '';
+                    this.path.selection.x = 30;
+                    this.path.selection.y = 480;
+                }
+                this.currentStep = 0;
+            }
+
             if(this.items[i].type === 'arrow' &&
-                this.items[i].isCopy === false &&
                 this.game.helper.isClick(e, this.items[i]) &&
                 this.items[i].isShow){
 
-                setTimeout(() => {
-                    let card = new Card(
-                        this.game.settings.path.img + 'games/turtle/arrows.svg',
-                        'arrow',
-                        'arrow',
-                        this.items[i]._x,
-                        this.items[i]._y,
-                        60,
-                        60,
-                        this.items[i].value,
-                        false,
-                        true,
-                        6
-                    );
-
-                    card.pos = this.items[i].pos;
-                    card.setScale(0.75);
-                    card.isCopy = false;
-                    this.items.push(card);
-                }, 20);
-
-
+                this.path.items[this.currentStep].pos = this.items[i].pos;
+                this.path.items[this.currentStep].value = this.items[i].value;
+                this.currentStep++;
 
             }
 
@@ -335,33 +382,12 @@ export default class MainScreen extends GameScreen{
                 this.game.helper.isClick(e, this.items[i]) &&
                 this.items[i].isShow){
                 this.prepareRound();
-
             }
         }
 
     }
 
     checkMouseUp(e){
-
-        for(let i=0;i<this.items.length;i++){
-            if(this.items[i].type === 'arrow'){
-                for (let key in this.path) {
-                    if(this.game.helper.isIntersect(this.items[i],this.path[key])){
-                        this.items[i]._x = this.path[key]._x;
-                        this.items[i]._y = this.path[key]._y;
-                        this.heroPath[key] = this.items[i].value;
-                        this.items[i].isCopy = true;
-                    }
-
-                    if(this.game.helper.isClick(e, this.items[i])){
-                        this.items[i].isCopy = true;
-                    }
-
-                }
-            }
-        }
-
-        console.log(this.heroPath);
 
     }
 
@@ -404,6 +430,10 @@ export default class MainScreen extends GameScreen{
         this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
         this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
         this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
+
+        this.game.ctx.lineWidth = "2";
+        this.game.ctx.strokeStyle = "green";
+        this.game.ctx.strokeRect(this.path.selection.x, this.path.selection.y, 45, 45)
 
         if(this.game.seconds < 10)
             {
