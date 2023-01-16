@@ -11,7 +11,7 @@ import DefaultSettings from "../../base/Settings/DefaultSettings";
     let helper = new GameHelper();
     let settings = new DefaultSettings();
     let uiManager = new UIManager(settings.path.img, settings.path.snd);
-    let game = new Game(800, 600, '#game-canvas', helper, uiManager);
+    let game = new Game(800, 600, '#world-canvas', helper, uiManager);
     game.settings = settings;
 
     let startScreen = new StartScreen('/start/start-bg.svg', game);
@@ -36,6 +36,7 @@ import DefaultSettings from "../../base/Settings/DefaultSettings";
     // включаем перетаскивание
     game.initDrag();
 
- document.querySelector('#game-canvas').style.display = 'block';
+ document.querySelector('#world-canvas').style.display = 'block';
+ document.querySelector('#game-canvas').style.display = 'none';
  document.querySelector('#card-canvas').style.display = 'none';
  game.draw();

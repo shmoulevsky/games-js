@@ -2,8 +2,8 @@ export default class Camera {
 
     constructor() {
 
-        this.x = 40;
-        this.y = 40;
+        this.x = 0;
+        this.y = 0;
         this.width = 800;
         this.height = 600;
         this.speed = 5;
@@ -13,6 +13,7 @@ export default class Camera {
         this.mouse.x = 0;
         this.mouse.y = 0;
         this.isMove = false;
+        this.isStoped = false;
     }
 
     moveLeft(){
