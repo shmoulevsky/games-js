@@ -32,6 +32,7 @@ module.exports = {
     'js/games/memory/pair/bundle' : './src/Memory/pair/main.js',
     'js/games/turtle/simple/bundle' : './src/Turtle/simple/main.js',
     'js/games/turtle/map/bundle' : './src/Turtle/map/main.js',
+    'js/games/world/map/bundle' : './src/World/map/main.js',
   },
   output: {
     path: path.resolve(__dirname, 'public'),
