@@ -1,9 +1,9 @@
 export default class World{
 
-    constructor(canvasId) {
+    constructor(canvasId, width, height) {
 
-        this.width = 3570;
-        this.height = 2160;
+        this.width = width;
+        this.height = height;
         this.x = 0;
         this.y = 0;
 

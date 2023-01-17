@@ -5,6 +5,7 @@ import Card from "../../../base/Images/Card";
 import gsap from "gsap";
 import Camera from "../../../base/Camera/Camera";
 import World from "../../../base/World/World";
+import MiniMap from "../../../base/World/MiniMap";
 
 // основной класс игры
 export default class MainScreen extends GameScreen{
@@ -19,12 +20,21 @@ export default class MainScreen extends GameScreen{
         this.bg = bgImg;
         this.cardManager = new CardManager();
         this.camera = new Camera();
-        this.camera.x = parseInt(localStorage.getItem('cameraX')) || -635;
-        this.camera.y = parseInt(localStorage.getItem('cameraY'))|| -725;
+        this.camera.x = parseInt(localStorage.getItem('cameraX')) || 0;
+        this.camera.y = parseInt(localStorage.getItem('cameraY'))|| 0;
         this.camera.mouse.x = parseInt(localStorage.getItem('mouseX'))|| 0;
         this.camera.mouse.y = parseInt(localStorage.getItem('mouseY'))|| 0;
 
-        this.world = new World('world-canvas');
+        this.world = new World('world-canvas', 3570, 2160);
+        this.miniMap = new MiniMap(
+            this.game.settings.path.img + '/world/map-mini.svg',
+            this.world.width,
+            this.world.height,
+            this.camera.width,
+            this.camera.height,
+            28,
+            120
+        );
 
         this.camera.speed = 5;
         this.game.settings.cellSize = 40;
@@ -154,6 +164,9 @@ export default class MainScreen extends GameScreen{
         this.camera.mouse.x = e.clientX - this.world.offsetX;
         this.camera.mouse.y = e.clientY - this.world.offsetY;
         this.camera.mouse.target = e.target;
+        
+        localStorage.setItem('mouseX', this.camera.mouse.x);
+        localStorage.setItem('mouseY', this.camera.mouse.y);
     }
 
     checkMouseClick(e){
@@ -181,6 +194,24 @@ export default class MainScreen extends GameScreen{
                 });
 
             }
+
+        }
+
+        if(this.game.helper.isClick(e, this.miniMap)){
+
+            let cords = this.miniMap.getWorldCoords(e.clientX - this.world.offsetX, e.clientY- this.world.offsetY);
+            this.camera.x = -cords.x;
+            this.camera.y = -cords.y;
+
+            for(let i=0;i<this.items.length;i++){
+                this.items[i]._x = this.items[i]._x + this.camera.x;
+                this.items[i]._y = this.items[i]._y + this.camera.y;
+            }
+
+            console.log(this.camera.x, this.camera.y);
+
+            this.camera.mouse.x = e.clientX - this.world.offsetX;
+            this.camera.mouse.y = e.clientY - this.world.offsetY;
 
         }
 
@@ -220,8 +251,6 @@ export default class MainScreen extends GameScreen{
 
         if(!this.camera.isMove) return;
 
-        localStorage.setItem('mouseX', this.camera.mouse.x);
-        localStorage.setItem('mouseY', this.camera.mouse.y);
         this.moveItems();
 
     }
@@ -243,10 +272,12 @@ export default class MainScreen extends GameScreen{
     // цикл отрисовки
     render(){
         this.checkMouse();
+        this.miniMap.draw(this.game.ctx, this.camera.x, this.camera.y);
+
         this.game.ctx.fillStyle = "#111";
         this.game.ctx.font = "18pt Arial";
-        this.game.ctx.fillText(this.items[0]._x , 600, 50);
-        this.game.ctx.fillText(this.items[0]._y , 700, 50);
+        this.game.ctx.fillText(this.camera.mouse.x , 600, 50);
+        this.game.ctx.fillText(this.camera.mouse.y , 700, 50);
 
         this.game.ctx.fillText('camX: ' + this.camera.x , 100, 50);
         this.game.ctx.fillText('camY: ' + this.camera.y , 240, 50);
