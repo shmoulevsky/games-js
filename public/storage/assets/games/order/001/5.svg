@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="14.609813mm"
+   height="18.889275mm"
+   viewBox="0 0 14.609813 18.889275"
+   version="1.1"
+   id="svg4668"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01, custom)"
+   sodipodi:docname="5.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview4670"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.4039843"
+     inkscape:cx="-0.35612934"
+     inkscape:cy="112.18074"
+     inkscape:window-width="1920"
+     inkscape:window-height="960"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4643" />
+  <defs
+     id="defs4665" />
+  <g
+     inkscape:label="Слой 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-55.261083,-58.021099)">
+    <g
+       id="g4643"
+       transform="translate(2.991815,-33.29673)">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:#4d2411;stroke-width:0.529167;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4582"
+         width="14.080646"
+         height="18.360107"
+         x="52.533852"
+         y="91.582413"
+         ry="0.22363025" />
+      <text
+         xml:space="preserve"
+         style="font-size:12.7px;fill:#20dae1;fill-opacity:1;stroke:none;stroke-width:0.165;stroke-opacity:1"
+         x="55.599224"
+         y="105.30173"
+         id="text4638"><tspan
+           sodipodi:role="line"
+           id="tspan4636"
+           style="font-size:12.7px;fill:#20dae1;fill-opacity:1;stroke:none;stroke-width:0.165;stroke-opacity:1"
+           x="55.599224"
+           y="105.30173">5</tspan></text>
+    </g>
+  </g>
+</svg>

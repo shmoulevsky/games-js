@@ -46,8 +46,6 @@ export default class Game{
 
         this.canvas.onmousedown = (e) => {
 
-
-
             for(var i=0;i<this.screens.length;i++)
              {
                  if(this.screens[i].isShow)

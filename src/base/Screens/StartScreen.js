@@ -42,12 +42,16 @@ export default class StartScreen extends GameScreen{
 		
         if(typeof(e) == 'undefined') return;
         
-        for(var i=0;i<this.items.length;i++){
+        for(let i=0;i<this.items.length;i++){
                         
-            if(this.items[i].name == 'start-btn' && 
+            if(this.items[i].name === 'start-btn' &&
                 this.game.helper.isClick(e, this.items[i]) && 
                 this.items[i].isShow){
-                    this.game.showScreen(0,1);
+
+                    setTimeout(() => {
+                        this.game.showScreen(0,1);
+                    }, 10);
+
                     e.preventDefault();
                     return;
             }

@@ -33,6 +33,8 @@ module.exports = {
     'js/games/turtle/simple/bundle' : './src/Turtle/simple/main.js',
     'js/games/turtle/map/bundle' : './src/Turtle/map/main.js',
     'js/games/world/map/bundle' : './src/World/map/main.js',
+    'js/games/order/simple/bundle' : './src/Order/simple/main.js',
+    'js/games/dots/simple/bundle' : './src/Dots/simple/main.js',
   },
   output: {
     path: path.resolve(__dirname, 'public'),
