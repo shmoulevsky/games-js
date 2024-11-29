@@ -37,8 +37,39 @@ export default class Game{
       this.offsetX = 0;
       this.offsetY = 0;
 
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+      this.scale = window.innerWidth / 1024;
+      if(this.scale > 1) this.scale = 1;
+
       this.helper = helper;
       this.uiManager = uiManager;
+
+      window.addEventListener('resize', () => {
+
+          this.canvas.width = window.innerWidth;
+          this.canvas.height = window.innerHeight;
+          let scale = window.innerWidth / 1024;
+
+          if(scale > 1) scale = 1;
+
+          this.settings.width = this.settings.width * scale
+          this.settings.height = this.settings.height * scale
+
+          for(let i=0;i<this.screens.length;i++) {
+
+             this.screens[i].width = window.innerWidth;
+             this.screens[i].height = window.innerHeight;
+             this.screens[i].fontSize = this.getScaled(this.screens[i]?.baseFontSize);
+
+             for(let j=0;j<this.screens[i].items.length;j++) {
+                 this.scale = scale;
+                 this.screens[i].items[j].setScale(scale);
+              }
+
+          }
+
+      });
 
     }
 
@@ -192,6 +223,10 @@ export default class Game{
                      
       requestAnimationFrame(() => this.draw());
          
+     }
+
+     getScaled(value){
+        return value*this.scale;
      }
   
   }

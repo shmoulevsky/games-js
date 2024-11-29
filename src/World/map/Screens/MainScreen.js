@@ -8,7 +8,7 @@ import World from "../../../base/World/World";
 import MiniMap from "../../../base/World/MiniMap";
 
 // основной класс игры
-export default class MainScreen extends GameScreen{
+export class MainScreen extends GameScreen{
 		
     constructor(bgImg, game, width = 800, height = 600){
         super();

@@ -5,24 +5,26 @@ import TextCardManager from './../../../base/Manager/TextCardManager'
 import DefaultCard from "../../../base/Cards/DefaultCard";
 import Card from "../../../base/Images/Card";
 import gsap from "gsap";
+import UIRenderer from "../../../base/UI/UIRenderer";
 
 // основной класс игры
-export default class MainScreen extends GameScreen{
+export  class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game, width = 800, height = 600){
+    constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.width = width;
-        this.height = height;
         this.game = game;
+        this.hero = hero;
+        this.width = game.settings.width;
+        this.height = game.settings.height;
         this.game.isPaused = true;
         this.bg = bgImg;
         this.cardManager = new CardManager();    
         this.textCardManager = new TextCardManager();
         this.defaultCard = new DefaultCard();
         this.cardManager = new CardManager();
+        this.uiRenderer = new UIRenderer();
         this.game.settings.figCount = 3;
-
 
     }
 
@@ -44,6 +46,11 @@ export default class MainScreen extends GameScreen{
             this.items.push(bg);
         }
 
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
+        }
+
 
         this.items.push(this.game.uiManager.ui.ok);
         this.items.push(this.game.uiManager.ui.wrong);
@@ -55,15 +62,14 @@ export default class MainScreen extends GameScreen{
 
     makeCards(){
 
-        let q = 0.7;
+        let q = 0.7*this.game.scale;
 
         for(let i = 1;i <= 3;i++) {
-            let house = new BaseSprite(this.game.settings.path.img + 'basket/house-'+i+'.svg','house-'+i,'house',240 * (i-1) + 80,120,220 ,379 , i);
+            let house = new BaseSprite(this.game.settings.path.img + 'basket/house-'+i+'.svg','house-'+i,'house',this.game.getScaled(240 * (i-1) + 80),this.game.getScaled(120),220 ,379 , i);
 
             house._iwidth *= q;
             house._iheight *= q;
-            house.scale = q;
-
+            house.setScale(q)
             this.items.push(house);
             this.basket.push(house);
 
@@ -71,6 +77,7 @@ export default class MainScreen extends GameScreen{
 
         for(let i = 0;i < this.game.settings.figCount * 3;i++) {
             let fig = new Card( this.game.settings.path.img + 'cards/fig-'+(i % 3 + 1)+'.svg','fig-' + i, 'fig', 0, 0,70,100, i % 3 + 1, false, true);
+            fig.setScale(this.game.scale)
             this.items.push(fig);
         }
 
@@ -85,8 +92,8 @@ export default class MainScreen extends GameScreen{
             if(this.items[i].type === 'fig')
             {
                 this.items[i].isShow = true;
-                this.items[i]._x = this.game.helper.getRandomInt(50, 750);
-                this.items[i]._y = this.game.helper.getRandomInt(390, 500);
+                this.items[i]._x = this.game.getScaled(this.game.helper.getRandomInt(50, 750));
+                this.items[i]._y = this.game.getScaled(this.game.helper.getRandomInt(390, 500));
             }
 
         }
@@ -183,12 +190,18 @@ export default class MainScreen extends GameScreen{
 
     // цикл отрисовки
     render(){
-			
-        this.game.ctx.fillStyle = "#111";
-        this.game.ctx.font = "20pt Arial";
-        this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
-        this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
-        this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
+
+        this.uiRenderer.render(
+            this.game.ctx,
+            this.game.uiManager.right,
+            this.game.uiManager.wrong,
+            this.game.uiManager.points,
+            this.game.settings.width,
+            this.game.settings.height,
+            this.minutes,
+            this.seconds,
+            0
+        );
 
         if(this.game.seconds < 10)
             {
@@ -203,10 +216,7 @@ export default class MainScreen extends GameScreen{
             }else{
                 this.minutes = this.game.minutes;
             }
-            
-            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 30, 50);
 
-        
     }
 
     checkResult(result) {

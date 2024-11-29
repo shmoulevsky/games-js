@@ -51,6 +51,12 @@ export default class TextTransparentCard{
     //ctx.strokeRect(this._x, this._y, this._width * this.scale, this._height * this.scale);
 
   }
+
+  setScale(scale){
+    this.scale = scale;
+    this._iwidth *= scale;
+    this._iheight *= scale;
+  }
     
   
 }

@@ -35,6 +35,11 @@ export default class TextSimpleCard{
     ctx.fillText( this.text , this._x + this.style.offsetX , this._y + this.style.offsetY);
 
   }
-    
-  
+
+  setScale(scale){
+    this.scale = scale;
+    this._iwidth *= scale;
+    this._iheight *= scale;
+  }
+
 }

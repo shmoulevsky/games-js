@@ -5,14 +5,16 @@ export default class ScenePositionerHorizontal{
         startY,
         offsetX,
         offsetY,
-        countInRow
+        countInRow,
+        scale
     ) {
         this.init(
             startX,
             startY,
             offsetX,
             offsetY,
-            countInRow
+            countInRow,
+            scale
         );
       }
 
@@ -21,14 +23,15 @@ export default class ScenePositionerHorizontal{
         startY,
         offsetX,
         offsetY,
-        countInRow
+        countInRow,
+        scale
     ) {
 
         this.counter = 0;
-        this.startX = startX;
-        this.startY = startY;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
+        this.startX = startX * scale;
+        this.startY = startY * scale;
+        this.offsetX = offsetX * scale;
+        this.offsetY = offsetY * scale;
         this.offset = 0;
         this.countInRow = countInRow;
 

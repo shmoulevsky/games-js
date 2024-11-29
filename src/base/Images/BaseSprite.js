@@ -6,6 +6,8 @@ export default class BaseSprite extends Image{
       this.type = type;
       this.value = value;
       this.src = img;
+      this._baseX = x;
+      this._baseY = y;
       this._x = x;
       this._y = y;
       this._width = width;
@@ -44,6 +46,12 @@ export default class BaseSprite extends Image{
        }
        this.animationLoop++;
          
+    }
+
+    setScale(scale){
+        this.scale = scale;
+        this._x = this._baseX * scale;
+        this._y = this._baseY * scale;
     }
 
     

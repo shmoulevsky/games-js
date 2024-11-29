@@ -5,16 +5,19 @@ import TextCardManager from './../../../base/Manager/TextCardManager'
 import DefaultCard from "../../../base/Cards/DefaultCard";
 import ScenePositionerHorizontal from "../../../base/Utils/ScenePositionerHorizontal";
 import {clone} from "lodash";
+import UIRenderer from "../../../base/UI/UIRenderer";
 
 // основной класс игры
-export default class MainScreen extends GameScreen{
+export class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game, width = 800, height = 600){
+    constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.width = width;
-        this.height = height;
+        this.hero = hero;
         this.game = game;
+        this.width = game.settings.width;
+        this.height = game.settings.height;
+        this.uiRenderer = new UIRenderer();
         this.game.isPaused = false;
         this.bg = bgImg;
         this.cardManager = new CardManager();    
@@ -40,6 +43,11 @@ export default class MainScreen extends GameScreen{
         if(this.bg){
             let bg = new BaseSprite( this.game.settings.path.img + this.bg,'bg','bg',0,0,this.width,this.height,' ');
             this.items.push(bg);
+        }
+
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
         }
 
         this.items.push(this.game.uiManager.ui.ok);
@@ -81,7 +89,8 @@ export default class MainScreen extends GameScreen{
             startY,
             offsetX,
             offsetY,
-            countInRow
+            countInRow,
+            this.game.scale
         );
 
 
@@ -108,6 +117,7 @@ export default class MainScreen extends GameScreen{
                     this.defaultCard.fontStyle
                 );
 
+                card.setScale(this.game.scale)
                 this.cards.push(card);
                 this.items.push(card);
 
@@ -129,7 +139,8 @@ export default class MainScreen extends GameScreen{
             120,
             80,
             80,
-            this.game.settings.fieldSize
+            this.game.settings.fieldSize,
+            this.game.scale
         );
 
         for (let i = 0; i < this.count; i++) {
@@ -149,6 +160,7 @@ export default class MainScreen extends GameScreen{
                 this.defaultCard.canDrag,
                 this.defaultCard.fontStyle
             );
+            card.setScale(this.game.scale)
             card.realValue = this.field[i];
             this.items.push(card);
         }
@@ -248,13 +260,18 @@ export default class MainScreen extends GameScreen{
 
     // цикл отрисовки
     render(){
-			
-        this.game.ctx.fillStyle = "#111";
-        this.game.ctx.font = "20pt Arial";
-        this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
-        this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
-        this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
-        this.game.ctx.fillText(this.pairRightCount +' / '+ this.pairCount , 120, 50);
+
+        this.uiRenderer.render(
+            this.game.ctx,
+            this.game.uiManager.right,
+            this.game.uiManager.wrong,
+            this.game.uiManager.points,
+            this.game.settings.width,
+            this.game.settings.height,
+            this.minutes,
+            this.seconds,
+            0
+        );
 
         if(this.game.seconds < 10)
             {
@@ -269,9 +286,6 @@ export default class MainScreen extends GameScreen{
             }else{
                 this.minutes = this.game.minutes;
             }
-            
-            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 30, 50);
 
-        
     }
 }

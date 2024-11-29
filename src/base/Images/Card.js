@@ -8,6 +8,8 @@ export default class Card extends BaseSprite{
       this.src = img;
       this._x = x;
       this._y = y;
+      this._baseX = x;
+      this._baseY = y;
       this._width = width;
       this._height = height;
       this._iwidth = width;
@@ -28,6 +30,8 @@ export default class Card extends BaseSprite{
         this.scale = scale;
         this._iwidth *= scale;
         this._iheight *= scale;
+        //this._x = this._baseX * scale;
+        //this._y = this._baseY * scale;
     }
   }
 

@@ -6,20 +6,23 @@ import DefaultCard from "../../../base/Cards/DefaultCard";
 import PermutationService from "../../../base/Utils/PermutationService";
 import ScenePositionerHorizontal from "../../../base/Utils/ScenePositionerHorizontal";
 import Card from "../../../base/Images/Card";
+import UIRenderer from "../../../base/UI/UIRenderer";
 
 // основной класс игры
-export default class MainScreen extends GameScreen{
+export class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game, width = 800, height = 600){
+    constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.width = width;
-        this.height = height;
+        this.hero = hero;
         this.game = game;
+        this.width = game.settings.width;
+        this.height = game.settings.height;
         this.game.isPaused = true;
         this.bg = bgImg;
         this.cardManager = new CardManager();    
         this.textCardManager = new TextCardManager();
+        this.uiRenderer = new UIRenderer();
         this.defaultCard = new DefaultCard();
         this.gameResult = {};
     }
@@ -43,10 +46,15 @@ export default class MainScreen extends GameScreen{
             this.items.push(bg);
         }
 
-        
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
+        }
+
         let btn = new BaseSprite(this.game.settings.path.img + 'ui/update-btn-short.svg',
-            'update-btn','update',730,533,50,49,' ');
+            'update-btn','update',this.game.settings.width - 100,this.game.settings.height - 100,50,49,' ');
         this.items.push(btn);
+
         this.items.push(this.game.uiManager.ui.ok);
         this.items.push(this.game.uiManager.ui.wrong);
         this.items.push(this.game.uiManager.ui.coin);
@@ -76,7 +84,8 @@ export default class MainScreen extends GameScreen{
             startY,
             offsetX,
             offsetY,
-            countInRow
+            countInRow,
+            this.game.scale
         );
 
         let figurePosition = this.game.helper.getRandomInt(0,15);
@@ -89,7 +98,7 @@ export default class MainScreen extends GameScreen{
                 'sort', 0, 0, 181, 181,' ' , false, false, 6);
             card._x = coords.x;
             card._y = coords.y;
-            card.setScale(0.45);
+            card.setScale(this.game.scale*0.45);
             card.value = i;
             card.pos = arrFigurs[i];
 
@@ -108,7 +117,8 @@ export default class MainScreen extends GameScreen{
             500,
             offsetX,
             offsetY,
-            10
+            10,
+            this.game.scale
         );
 
         for (let i = 0; i < 5; i++) {
@@ -120,9 +130,9 @@ export default class MainScreen extends GameScreen{
 
             card._x = coords.x;
             card._y = coords.y;
-            card.setScale(0.45);
             card.value = i;
             card.pos = i;
+            card.setScale(this.game.scale*0.45)
             this.items.push(card);
         }
 
@@ -143,7 +153,7 @@ export default class MainScreen extends GameScreen{
                 this.game.uiManager.wrong++;
                 this.game.uiManager.tweens['wrong'].play();
                 this.game.uiManager.tweens['wrong'].restart();
-                this.game.uiManager.sounds['wrong'].play();
+                //this.game.uiManager.sounds['wrong'].play();
 
                 setTimeout(() => {
                     this.prepareRound();
@@ -153,6 +163,15 @@ export default class MainScreen extends GameScreen{
 
 
         }, 100);
+
+        for(let i=0;i<this.items.length;i++) {
+
+            if(this.items[i].type === 'sort' || this.items[i].type === 'answer'){
+                continue;
+            }
+
+            this.items[i].setScale(this.game.scale);
+        }
 
     }
 
@@ -220,34 +239,35 @@ export default class MainScreen extends GameScreen{
 
     // цикл отрисовки
     render(){
-			
-        this.game.ctx.fillStyle = "#111";
-        this.game.ctx.font = "20pt Arial";
-        this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
-        this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
-        this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
-        this.game.ctx.fillStyle = '#FF0000';
 
-        let width = 800 - ((800 / this.game.settings.time.short) * this.game.secondsShort) / 10;
-        this.game.ctx.fillRect(0, 0, width, 10);
+        let stripeWidth = this.game.settings.width - ((this.game.settings.width / this.game.settings.time.short) * this.game.secondsShort) / 10;
+
+        this.uiRenderer.render(
+            this.game.ctx,
+            this.game.uiManager.right,
+            this.game.uiManager.wrong,
+            this.game.uiManager.points,
+            this.game.settings.width,
+            this.game.settings.height,
+            this.minutes,
+            this.seconds,
+            stripeWidth
+        );
+
+        if(this.game.seconds < 10) {
+            this.seconds = '0' + this.game.seconds;
+        }else{
+            this.seconds = this.game.seconds
+        }
+
+        if(this.game.minutes < 10)
+        {
+            this.minutes = '0' + this.game.minutes;
+        }else{
+            this.minutes = this.game.minutes;
+        }
 
 
-        if(this.game.seconds < 10)
-            {
-                this.seconds = '0' + this.game.seconds;
-            }else{
-                this.seconds = this.game.seconds
-            }
-            
-            if(this.game.minutes < 10)
-            {
-                this.minutes = '0' + this.game.minutes;
-            }else{
-                this.minutes = this.game.minutes;
-            }
-            
-            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 30, 50);
-        
     }
 
     checkResult(item) {
@@ -258,7 +278,7 @@ export default class MainScreen extends GameScreen{
 
         copyCard._x = this.gameResult.x;
         copyCard._y = this.gameResult.y;
-        copyCard.scale = 0.45;
+        copyCard.scale = 0.45*this.game.scale;
         copyCard.value = item.value;
         copyCard.pos = item.pos;
 
@@ -279,7 +299,7 @@ export default class MainScreen extends GameScreen{
             this.game.uiManager.wrong++;
             this.game.uiManager.tweens['wrong'].play();
             this.game.uiManager.tweens['wrong'].restart();
-            this.game.uiManager.sounds['wrong'].play();
+            //this.game.uiManager.sounds['wrong'].play();
 
             setTimeout(() => {
                 copyCard.isShow = false;

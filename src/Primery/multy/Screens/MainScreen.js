@@ -6,14 +6,15 @@ import ScenePositionerHorizontal from './../../../base/Utils/ScenePositionerHori
 import DefaultCard from "../../../base/Cards/DefaultCard";
 
 // основной класс игры
-export default class MainScreen extends GameScreen{
+export class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game, width = 800, height = 600){
+    constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.width = width;
-        this.height = height;
+        this.width = game.settings.width;
+        this.height = game.settings.height;
         this.game = game;
+        this.hero = hero;
         this.game.isPaused = true;
         this.bg = bgImg;
         this.cardManager = new CardManager();    
@@ -49,9 +50,15 @@ export default class MainScreen extends GameScreen{
             this.items.push(bg);
         }
 
-        
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
+        }
+
+
         let btn = new BaseSprite(this.game.settings.path.img + 'ui/update-btn-short.svg',
-            'update-btn','update',730,533,50,49,' ');
+            'update-btn','update',this.game.settings.width - 100,this.game.settings.height - 100,50,49,' ');
+
         this.items.push(btn);
         this.items.push(this.game.uiManager.ui.ok);
         this.items.push(this.game.uiManager.ui.wrong);
@@ -79,7 +86,7 @@ export default class MainScreen extends GameScreen{
                 this.game.uiManager.wrong++;
                 this.game.uiManager.tweens['wrong'].play();
                 this.game.uiManager.tweens['wrong'].restart();
-                this.game.uiManager.sounds['wrong'].play();
+                //this.game.uiManager.sounds['wrong'].play();
 
                 setTimeout(() => {
                     this.prepareRound();
@@ -250,14 +257,14 @@ export default class MainScreen extends GameScreen{
 
     // цикл отрисовки
     render(){
-			
-        this.game.ctx.fillStyle = "#111";
+
+        this.game.ctx.fillStyle = "#ffffff";
         this.game.ctx.font = "20pt Arial";
-        this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
-        this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
-        this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
-        this.game.ctx.fillStyle = '#FF0000';
-        let width = 800 - ((800 / this.game.settings.time.short) * this.game.secondsShort) / 10;
+        this.game.ctx.fillText(this.game.uiManager.right , this.game.settings.width - 200, 70);
+        this.game.ctx.fillText(this.game.uiManager.wrong , this.game.settings.width - 100, 70);
+        this.game.ctx.fillText(this.game.uiManager.points , this.game.settings.width - 400, 70);
+        let width = this.game.settings.width - ((this.game.settings.width / this.game.settings.time.short) * this.game.secondsShort) / 10;
+        this.game.ctx.fillStyle = '#ff0000';
         this.game.ctx.fillRect(0, 0, width, 10);
 
         if(this.game.seconds < 10)
@@ -274,7 +281,7 @@ export default class MainScreen extends GameScreen{
                 this.minutes = this.game.minutes;
             }
             
-            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 30, 50);
+            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 50, 70);
         
     }
 
@@ -316,7 +323,7 @@ export default class MainScreen extends GameScreen{
             this.game.uiManager.wrong++;
             this.game.uiManager.tweens['wrong'].play();
             this.game.uiManager.tweens['wrong'].restart();
-            this.game.uiManager.sounds['wrong'].play();
+            //this.game.uiManager.sounds['wrong'].play();
 
             setTimeout(() => {
                 this.prepareRound()

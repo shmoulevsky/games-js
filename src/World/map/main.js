@@ -1,42 +1,19 @@
-import Game from '../../../src/base/Game';
-import GameHelper from '../../../src/base/Utils/GameHelper';
-import MainScreen from './Screens/MainScreen';
-import UIManager from "../../base/UI/UIManager";
-import StartScreen from "../../base/Screens/StartScreen";
-import ResultScreen from "../../base/Screens/ResultScreen";
+import GameManager from "../../base/GameManager";
 import DefaultSettings from "../../base/Settings/DefaultSettings";
+import AssetManager from "../../base/Asset/AssetManager";
 
 
+let options = null
 
-    let helper = new GameHelper();
-    let settings = new DefaultSettings();
-    let uiManager = new UIManager(settings.path.img, settings.path.snd);
-    let game = new Game(800, 600, '#world-canvas', helper, uiManager);
-    game.settings = settings;
+let code = '00019'
+let assetManager = new AssetManager()
 
-    let startScreen = new StartScreen('/start/start-bg.svg', game);
-	startScreen.isShow = true;
+let bg = assetManager.getBackground()
+let startBg = assetManager.getStartBackground()
+let settingsBg = assetManager.getSettingsBackground()
+let winBg = assetManager.getWinBackground()
+let hero = assetManager.getHero()
+let settings = new DefaultSettings()
+let gameManager = new GameManager()
 
-    let mainScreen = new MainScreen('/world/map.svg', game);
-    mainScreen.isShow = false;
-
-    let resultScreen = new ResultScreen('/win/win-bg.svg', game);
-	resultScreen.isShow = false;
-
-    // расстановка и создание объектов сцены
-    startScreen.initScene();
-    mainScreen.initScene();
-    resultScreen.initScene();
-
-
-    game.screens.push(startScreen);
-    game.screens.push(mainScreen);
-    game.screens.push(resultScreen);
-
-    // включаем перетаскивание
-    game.initDrag();
-
- document.querySelector('#world-canvas').style.display = 'block';
- document.querySelector('#game-canvas').style.display = 'none';
- document.querySelector('#card-canvas').style.display = 'none';
- game.draw();
+gameManager.init(options, settings, bg, startBg, settingsBg, winBg, hero, code)

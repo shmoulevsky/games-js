@@ -5,16 +5,19 @@ import TextCardManager from './../../../base/Manager/TextCardManager'
 import TextSimpleCard from "../../../base/Images/TextSimpleCard";
 import DefaultSimpleCard from "../../../base/Cards/DefaultSimpleCard";
 import TextTransparentCard from "../../../base/Images/TextTransparentCard";
+import UIRenderer from "../../../base/UI/UIRenderer";
 
 // основной класс игры
-export default class MainScreen extends GameScreen{
+export class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game, width = 800, height = 600){
+    constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.width = width;
-        this.height = height;
+        this.hero = hero;
         this.game = game;
+        this.width = game.settings.width;
+        this.height = game.settings.height;
+        this.uiRenderer = new UIRenderer();
         this.game.isPaused = true;
         this.bg = bgImg;
         this.cardManager = new CardManager();    
@@ -45,8 +48,13 @@ export default class MainScreen extends GameScreen{
             this.items.push(bg);
         }
 
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
+        }
+
         let btn = new BaseSprite(this.game.settings.path.img + 'ui/update-btn-short.svg',
-            'update-btn','update',730,533,50,49,' ');
+            'update-btn','update',this.game.settings.width - 100,this.game.settings.height - 100,50,49,' ');
         this.items.push(btn);
 
         this.currentLetter = this.game.helper.getRandomInt(0, 32);
@@ -253,13 +261,19 @@ export default class MainScreen extends GameScreen{
 
     // цикл отрисовки
     render(){
-			
-        this.game.ctx.fillStyle = "#111";
-        this.game.ctx.font = "20pt Arial";
-        this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
-        this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
-        this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
-        this.game.ctx.fillText(this.currentResultCount + '/' + this.currentLetterCount , 115, 50);
+
+        this.uiRenderer.render(
+            this.game.ctx,
+            this.game.uiManager.right,
+            this.game.uiManager.wrong,
+            this.game.uiManager.points,
+            this.game.settings.width,
+            this.game.settings.height,
+            this.minutes,
+            this.seconds,
+            0
+        );
+
         this.game.ctx.font = "40pt Arial";
 
 
@@ -280,8 +294,6 @@ export default class MainScreen extends GameScreen{
                 this.minutes = this.game.minutes;
             }
             
-            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 30, 50);
 
-        
     }
 }

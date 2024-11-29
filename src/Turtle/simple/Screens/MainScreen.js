@@ -6,16 +6,19 @@ import DefaultCard from "../../../base/Cards/DefaultCard";
 import ScenePositionerHorizontal from "../../../base/Utils/ScenePositionerHorizontal";
 import {clone} from "lodash";
 import Card from "../../../base/Images/Card";
+import UIRenderer from "../../../base/UI/UIRenderer";
 
 // основной класс игры
-export default class MainScreen extends GameScreen{
+export class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game, width = 800, height = 600){
+    constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.width = width;
-        this.height = height;
+        this.hero = hero;
         this.game = game;
+        this.width = game.settings.width;
+        this.height = game.settings.height;
+        this.uiRenderer = new UIRenderer();
         this.game.isPaused = false;
         this.bg = bgImg;
         this.cardManager = new CardManager();
@@ -73,7 +76,7 @@ export default class MainScreen extends GameScreen{
             items : [],
             userItems : [],
             values : [],
-            selection : {x : 30, y : 480}
+            selection : {x : 30, y : 500}
         };
 
         this.finish = null;
@@ -84,9 +87,15 @@ export default class MainScreen extends GameScreen{
             this.items.push(bg);
         }
 
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
+        }
+
         let btn = new BaseSprite(this.game.settings.path.img + 'ui/update-btn-short.svg',
-            'update-btn','update',730,533,50,49,' ');
+            'update-btn','update',this.game.settings.width - 100,this.game.settings.height - 100,50,49,' ');
         this.items.push(btn);
+
 
         this.items.push(this.game.uiManager.ui.ok);
         this.items.push(this.game.uiManager.ui.wrong);
@@ -116,7 +125,7 @@ export default class MainScreen extends GameScreen{
                     'field',
                     'field-'+i,
                     i*(this.game.settings.cellSize + 1) + 30,
-                    j*(this.game.settings.cellSize + 1) + 80,
+                    j*(this.game.settings.cellSize + 1) + 100,
                     this.game.settings.cellSize,
                     this.game.settings.cellSize,
                     i+j,
@@ -139,7 +148,7 @@ export default class MainScreen extends GameScreen{
             name,
             pos,
             positionX * (this.game.settings.cellSize + 1) + 30,
-            positionY * (this.game.settings.cellSize + 1) + 80,
+            positionY * (this.game.settings.cellSize + 1) + 100,
             this.game.settings.cellSize,
             this.game.settings.cellSize,
             1,
@@ -156,7 +165,7 @@ export default class MainScreen extends GameScreen{
 
     makePath() {
 
-        let scenePositioner = new ScenePositionerHorizontal(430, 80,56,56,4);
+        let scenePositioner = new ScenePositionerHorizontal(430, 100,56,56,4, this.game.scale);
 
         for (let i = 0; i < 4; i++) {
 
@@ -176,11 +185,11 @@ export default class MainScreen extends GameScreen{
             );
 
             card.pos = i;
-            card.setScale(0.75);
+            card.setScale(0.75*this.game.scale);
             this.items.push(card);
         }
 
-        scenePositioner.init(30, 480,56,56,12);
+        scenePositioner.init(30, 500,56,56,12, this.game.scale);
 
         let countUserSteps = 24;
 
@@ -214,7 +223,7 @@ export default class MainScreen extends GameScreen{
             'play',
             'play',
             (11*56)+38,
-            80,
+            100,
             this.game.settings.cellSize,
             this.game.settings.cellSize,
             '',
@@ -232,7 +241,7 @@ export default class MainScreen extends GameScreen{
             'clear',
             'clear',
             (12*56)+38,
-            80,
+            100,
             this.game.settings.cellSize,
             this.game.settings.cellSize,
             '',
@@ -264,11 +273,11 @@ export default class MainScreen extends GameScreen{
             if(path[index].value === '') {
                 setTimeout(() => {
                     hero._x = (context.heroX * 61) + 30;
-                    hero._y = (context.heroY * 61) + 80;
+                    hero._y = (context.heroY * 61) + 100;
                     hero.positionX = context.heroX;
                     hero.positionY = context.heroY;
                     context.path.selection.x = 30;
-                    context.path.selection.y = 480;
+                    context.path.selection.y = 500;
                     context.isAnimation = false;
                 }, 1000)
 
@@ -363,7 +372,7 @@ export default class MainScreen extends GameScreen{
                     this.path.items[key].pos = 4;
                     this.path.items[key].value = '';
                     this.path.selection.x = 30;
-                    this.path.selection.y = 480;
+                    this.path.selection.y = 500;
                 }
                 this.currentStep = 0;
             }
@@ -424,12 +433,18 @@ export default class MainScreen extends GameScreen{
 
     // цикл отрисовки
     render(){
-			
-        this.game.ctx.fillStyle = "#111";
-        this.game.ctx.font = "20pt Arial";
-        this.game.ctx.fillText(this.game.uiManager.right , 600, 50);
-        this.game.ctx.fillText(this.game.uiManager.wrong , 700, 50);
-        this.game.ctx.fillText(this.game.uiManager.points , 400, 50);
+
+        this.uiRenderer.render(
+            this.game.ctx,
+            this.game.uiManager.right,
+            this.game.uiManager.wrong,
+            this.game.uiManager.points,
+            this.game.settings.width,
+            this.game.settings.height,
+            this.minutes,
+            this.seconds,
+            0
+        );
 
         this.game.ctx.lineWidth = "2";
         this.game.ctx.strokeStyle = "green";
@@ -449,8 +464,6 @@ export default class MainScreen extends GameScreen{
                 this.minutes = this.game.minutes;
             }
             
-            this.game.ctx.fillText(this.minutes + ':' + this.seconds , 30, 50);
 
-        
     }
 }

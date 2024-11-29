@@ -9,5 +9,17 @@ export default class DefaultSettings{
         this.scaleImg = 0.5;
         this.time.all = 2;
         this.time.short = 15;
+        this.width = 1024;
+        this.height = 700;
+
+        let outerParams = document.getElementById('game-params')?.value ?? '';
+
+        if(outerParams){
+            outerParams = JSON.parse(outerParams);
+        }
+
+        this.title = outerParams?.title ?? '';
+        this.lang = outerParams?.lang ?? '';
+        this.user = outerParams?.user ?? '';
     }
 }
