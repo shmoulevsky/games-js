@@ -27,6 +27,7 @@ export class MainScreen extends GameScreen{
 
         this.game.settings.fieldSize = 4;
         this.game.settings.secondsLeft = 10;
+        this.name = 'game';
 
     }
 

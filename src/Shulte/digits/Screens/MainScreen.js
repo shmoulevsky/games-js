@@ -26,6 +26,7 @@ export class MainScreen extends GameScreen{
         this.game.settings.digitsRow = 8;
         this.game.settings.digitsCount = Math.pow(this.game.settings.digitsRow, 2);
         this.game.settings.currentDigit = 0;
+        this.name = 'game';
     }
 
     initScene(){

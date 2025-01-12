@@ -24,6 +24,7 @@ export class MainScreen extends GameScreen{
         this.defaultSimpleCard = new DefaultSimpleCard();
         this.cardManager = new CardManager();
         this.game.settings.count = 15;
+        this.name = 'game';
 
 
     }

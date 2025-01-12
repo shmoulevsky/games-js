@@ -14,7 +14,7 @@ export class MainScreen extends GameScreen{
     constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.hero = hero;
+        this.heroBg = hero;
         this.game = game;
         this.width = game.settings.width;
         this.height = game.settings.height;
@@ -24,6 +24,7 @@ export class MainScreen extends GameScreen{
         this.cardManager = new CardManager();
         this.game.settings.cellSize = 40;
         this.game.settings.cellScale = 1;
+        this.name = 'game';
 
     }
 
@@ -61,9 +62,9 @@ export class MainScreen extends GameScreen{
             this.items.push(bg);
         }
 
-        if(this.hero){
-            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
-            this.items.push(hero);
+        if(this.heroBg){
+            let heroBg = new BaseSprite( this.game.settings.path.img + this.heroBg.path,'heroBg','hero',this.heroBg.x,this.heroBg.y,this.heroBg.width,this.heroBg.height,' ');
+            this.items.push(heroBg);
         }
 
         let btn = new BaseSprite(this.game.settings.path.img + 'ui/update-btn-short.svg',

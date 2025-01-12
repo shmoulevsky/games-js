@@ -24,6 +24,7 @@ export class MainScreen extends GameScreen{
         this.bg = bgImg;
         this.cardManager = new CardManager();
         this.game.settings.cellSize = 50;
+        this.name = 'game';
 
     }
 

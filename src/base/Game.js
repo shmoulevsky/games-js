@@ -37,8 +37,8 @@ export default class Game{
       this.offsetX = 0;
       this.offsetY = 0;
 
-      this.canvas.width = window.innerWidth;
-      this.canvas.height = window.innerHeight;
+      this.canvas.width = window.innerWidth > 1024 ? 1024 : window.innerWidth;
+      this.canvas.height = window.innerHeight > 700 ? 700 : window.innerHeight;
       this.scale = window.innerWidth / 1024;
       if(this.scale > 1) this.scale = 1;
 
@@ -47,8 +47,8 @@ export default class Game{
 
       window.addEventListener('resize', () => {
 
-          this.canvas.width = window.innerWidth;
-          this.canvas.height = window.innerHeight;
+          this.canvas.width = window.innerWidth > 1024 ? 1024 : window.innerWidth;
+          this.canvas.height = window.innerHeight > 700 ? 700 : window.innerHeight;
           let scale = window.innerWidth / 1024;
 
           if(scale > 1) scale = 1;
@@ -162,7 +162,23 @@ export default class Game{
         this.screens[dest].isShow = true;
         
     }
-    
+
+    showScreenByName(name){
+        for(let i=0;i<this.screens.length;i++){
+            this.screens[i].isShow = this.screens[i]?.name === name;
+        }
+    }
+
+    getScreenByName(name){
+
+        for(let i=0;i<this.screens.length;i++){
+            if (this.screens[i]?.name === name){
+                return this.screens[i];
+            }
+        }
+        return null;
+    }
+
     reset(){
       this.uiManager.right = 0;
       this.uiManager.wrong = 0;
@@ -201,7 +217,7 @@ export default class Game{
                              
     draw() {
 
-        this.ctx.clearRect(0, 0, 800, 600);
+        this.ctx.clearRect(0, 0, 1024, 700);
 
          for(var i=0;i<this.screens.length;i++)
          {

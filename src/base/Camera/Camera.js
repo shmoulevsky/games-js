@@ -4,8 +4,8 @@ export default class Camera {
 
         this.x = 0;
         this.y = 0;
-        this.width = 800;
-        this.height = 600;
+        this.width = 1024;
+        this.height = 700;
         this.speed = 5;
         this.speedX = 0;
         this.speedY = 0;
@@ -16,27 +16,27 @@ export default class Camera {
         this.isStoped = false;
     }
 
-    moveLeft(){
+    moveLeft(speed = 1){
         this.speedX = this.speed;
         this.x += this.speedX;
         this.isMove = true;
     }
 
-    moveRight(){
+    moveRight(speed = 1){
         this.speedX = -this.speed;
         this.x += this.speedX;
         this.isMove = true;
     }
 
-    moveUp(){
+    moveUp(speed = 1){
         this.speedY = this.speed;
         this.y += this.speedY;
         this.isMove = true;
     }
 
-    moveDown(){
+    moveDown(speed = 1){
         this.speedY = -this.speed;
-        this.y += this.speedY;
+        this.y += (this.speedY);
         this.isMove = true;
     }
 

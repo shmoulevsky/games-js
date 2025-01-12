@@ -25,6 +25,7 @@ export  class MainScreen extends GameScreen{
         this.cardManager = new CardManager();
         this.uiRenderer = new UIRenderer();
         this.game.settings.figCount = 3;
+        this.name = 'game';
 
     }
 

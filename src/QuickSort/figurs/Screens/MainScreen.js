@@ -29,6 +29,7 @@ export class MainScreen extends GameScreen{
         this.game.settings.coords = [];
         this.game.settings.coords = [[50,480],[660,480],[355,480]];
         this.isAnimation = false;
+        this.name = 'game';
     }
 
     initScene(){

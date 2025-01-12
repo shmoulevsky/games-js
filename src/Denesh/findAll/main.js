@@ -8,11 +8,12 @@ let options = null
 let code = '00004'
 let assetManager = new AssetManager()
 
-let bg = assetManager.getBackground()
+let env = assetManager.getEnviroment('ice')
+let bg = env.bg
 let startBg = assetManager.getStartBackground()
 let settingsBg = assetManager.getSettingsBackground()
 let winBg = assetManager.getWinBackground()
-let hero = assetManager.getHero()
+let hero = env.hero
 let settings = new DefaultSettings()
 let gameManager = new GameManager()
 

@@ -20,6 +20,7 @@ export class MainScreen extends GameScreen{
         this.cardManager = new CardManager();    
         this.textCardManager = new TextCardManager();
         this.defaultCard = new DefaultCard();
+        this.name = 'game';
     }
 
     initScene(){

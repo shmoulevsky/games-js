@@ -29,6 +29,7 @@ export class MainScreen extends GameScreen{
         this.game.settings.fromImg = 1;
         this.game.settings.toImg = 1;
         this.game.settings.seconds_left_var = 3;
+        this.name = 'game';
 
     }
 

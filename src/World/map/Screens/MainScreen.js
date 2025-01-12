@@ -10,14 +10,14 @@ import MiniMap from "../../../base/World/MiniMap";
 // основной класс игры
 export class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game, width = 800, height = 600){
+    constructor(bgImg, game, hero){
         super();
         this.basket = [];
-        this.width = width;
-        this.height = height;
+        this.width = game.settings.width;
+        this.height = game.settings.height;
         this.game = game;
         this.game.isPaused = false;
-        this.bg = bgImg;
+        this.bg = '/world/map.svg';
         this.cardManager = new CardManager();
         this.camera = new Camera();
         this.camera.x = parseInt(localStorage.getItem('cameraX')) || 0;
@@ -25,7 +25,7 @@ export class MainScreen extends GameScreen{
         this.camera.mouse.x = parseInt(localStorage.getItem('mouseX'))|| 0;
         this.camera.mouse.y = parseInt(localStorage.getItem('mouseY'))|| 0;
 
-        this.world = new World('world-canvas', 3570, 2160);
+        this.world = new World('game-canvas', 3570, 2160);
         this.miniMap = new MiniMap(
             this.game.settings.path.img + '/world/map-mini.svg',
             this.world.width,
@@ -36,10 +36,11 @@ export class MainScreen extends GameScreen{
             120
         );
 
-        this.camera.speed = 5;
+        this.camera.speed = 8;
         this.game.settings.cellSize = 40;
         this.game.settings.cellScale = 1;
-        this.game.settings.mouseOffset = 130;
+        this.game.settings.mouseOffset = 100;
+        this.name = 'game';
 
     }
 
@@ -57,7 +58,7 @@ export class MainScreen extends GameScreen{
         document.body.addEventListener('mousemove', (e) => {
 
             this.camera.isStoped = false;
-            if(e.target.id !== 'world-canvas'){
+            if(e.target.id !== 'game-canvas'){
                 this.camera.isStoped = true;
             }
 
@@ -200,15 +201,32 @@ export class MainScreen extends GameScreen{
         if(this.game.helper.isClick(e, this.miniMap)){
 
             let cords = this.miniMap.getWorldCoords(e.clientX - this.world.offsetX, e.clientY- this.world.offsetY);
+
+
+            if(cords.x >= this.world.width - this.game.settings.width){
+                cords.x = this.world.width - this.game.settings.width;
+            }
+
+            if(cords.x <= 0){
+                cords.x = this.game.settings.width;
+            }
+
+            if(cords.y >= this.world.height - this.game.settings.height){
+                cords.y = this.world.height - this.game.settings.height;
+            }
+
+            if(cords.y <= 0){
+                cords.y = this.game.settings.height;
+            }
+
             this.camera.x = -cords.x;
             this.camera.y = -cords.y;
 
             for(let i=0;i<this.items.length;i++){
-                this.items[i]._x = this.items[i]._x + this.camera.x;
-                this.items[i]._y = this.items[i]._y + this.camera.y;
+                this.items[i]._x = this.items[i]._baseX + this.camera.x;
+                this.items[i]._y = this.items[i]._baseY + this.camera.y;
             }
 
-            console.log(this.camera.x, this.camera.y);
 
             this.camera.mouse.x = e.clientX - this.world.offsetX;
             this.camera.mouse.y = e.clientY - this.world.offsetY;
@@ -229,27 +247,33 @@ export class MainScreen extends GameScreen{
 
         //left
         if(this.camera.mouse.x < this.game.settings.mouseOffset && this.camera.x < 0) {
-            this.camera.moveLeft();
+            this.speedX = (Math.abs(this.game.settings.width - this.camera.mouse.x - this.game.settings.mouseOffset)) / this.game.settings.mouseOffset;
+            this.camera.moveLeft(this.speedX);
         }
 
         //right
         if(this.camera.mouse.x > this.width - this.game.settings.mouseOffset && this.camera.x > (this.width-this.world.width+this.game.settings.mouseOffset)) {
-            this.camera.moveRight();
+            this.speedX = (Math.abs(this.game.settings.width - this.camera.mouse.x - this.game.settings.mouseOffset)) / this.game.settings.mouseOffset;
+            this.camera.moveRight(this.speedX);
         }
 
         //down
         if(this.camera.mouse.y > this.height - this.game.settings.mouseOffset
             && this.camera.y > (this.height-this.world.height+this.game.settings.mouseOffset)
         ) {
-            this.camera.moveDown();
+
+            this.speedY = (Math.abs(this.game.settings.height - this.camera.mouse.y - this.game.settings.mouseOffset)) / this.game.settings.mouseOffset;
+            this.camera.moveDown(this.speedY);
         }
 
         //up
         if(this.camera.mouse.y < this.game.settings.mouseOffset && this.camera.y < 0) {
-            this.camera.moveUp();
+            this.speedY = (Math.abs(this.game.settings.height - this.camera.mouse.y - this.game.settings.mouseOffset)) / this.game.settings.mouseOffset;
+            this.camera.moveUp(this.speedY);
         }
 
         if(!this.camera.isMove) return;
+
 
         this.moveItems();
 

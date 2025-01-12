@@ -23,6 +23,7 @@ export class MainScreen extends GameScreen{
         this.uiRenderer = new UIRenderer();
         this.defaultCard = new DefaultCard();
         this.cardManager = new CardManager();
+        this.name = 'game';
     }
 
     initScene(){

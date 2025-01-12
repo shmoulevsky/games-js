@@ -17,20 +17,20 @@ export default class GameManager{
         game.settings = settings;
 
         let settingsScreen = null
-        let startScreen = new StartScreen(startBg, game);
+        let startScreen = new StartScreen(bg, game, hero);
 
         let mainScreenFactory = new MainScreenFactory();
         let mainScreen = mainScreenFactory.make(code, bg, game, hero);
         mainScreen.isShow = false;
 
         if (options){
-            settingsScreen = new SettingsScreen(settingsBg, game, 'Настройки', options);
+            settingsScreen = new SettingsScreen(bg, game, 'Настройки', options);
             settingsScreen.isShow = false;
         }
 
         startScreen.isShow = true;
 
-        let resultScreen = new ResultScreen(winBg, game);
+        let resultScreen = new ResultScreen(winBg, game, hero);
         resultScreen.isShow = false;
 
         // расстановка и создание объектов сцены

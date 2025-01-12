@@ -21,8 +21,8 @@ export default class SettingsScreen extends GameScreen{
         this.centerY = 100;
         this.baseFontSize = 24;
         this.fontSize = 24;
+        this.name = 'settings';
 
-        
     }
 
     initScene(){

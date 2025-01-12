@@ -1,3 +1,7 @@
+body{
+    overflow: hidden;
+}
+
 .page-wrap{
     display: flex;
 }

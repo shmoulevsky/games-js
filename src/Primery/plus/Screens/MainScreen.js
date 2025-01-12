@@ -18,6 +18,7 @@ export class MainScreen extends GameScreen{
         this.game.isPaused = true;
         this.bg = bgImg;
         this.hero = hero;
+        this.name = 'game';
         this.cardManager = new CardManager();
         this.textCardManager = new TextCardManager();
         this.uiRenderer = new UIRenderer();
@@ -248,8 +249,8 @@ export class MainScreen extends GameScreen{
             this.game.seconds--;
         }
 
-        if(this.game.minutes === 0 && this.game.seconds === 0) {
-            this.game.showScreen(1,2); 
+        if(this.game.minutes === 0 || this.game.seconds === 58) {
+            this.game.showScreenByName('result');
             clearInterval(this.game.timerId);
            
         }

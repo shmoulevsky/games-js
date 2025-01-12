@@ -8,8 +8,8 @@ export default class MiniMap{
         this.border = border;
 
         this.big = {
-            x : 650,
-            y : 500,
+            x : 1024 - (width / scale) - 100,
+            y : 700 - (height / scale) - 100,
             width : width / scale,
             height : height / scale,
         }
@@ -21,8 +21,8 @@ export default class MiniMap{
         this.isShow = true;
 
         this.small = {
-            x : 650,
-            y : 500,
+            x : 1024 - (width / scale) - 100,
+            y : 700 - (height / scale) + 100,
             width : this.big.width / this.coefX,
             height : this.big.height / this.coefY,
         }

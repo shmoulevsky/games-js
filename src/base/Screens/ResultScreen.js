@@ -5,15 +5,17 @@ import gsap from "gsap";
 // основной класс игры
 export default class MainScreen extends GameScreen{
 		
-    constructor(bgImg, game){
+    constructor(bgImg, game, hero){
         super();
         
         this.basket = [];
         this.width = game.settings.width;
         this.height = game.settings.height;
         this.game = game;
+        this.name = 'result';
         this.bg = bgImg;
-                      
+        this.hero = hero;
+
         
     }
 
@@ -24,15 +26,17 @@ export default class MainScreen extends GameScreen{
         this.items = [];
 
         let bg = new BaseSprite( this.game.settings['path']['img'] + this.bg,'bg','win',0,0,this.width,this.height,' ');
-        
-        let hero_win = new BaseSprite(this.game.settings['path']['img'] + 'hero/owl.svg','hero-1','win',this.width - 400,this.height - 400,400,400,' ');
-		let win_text = new BaseSprite(this.game.settings['path']['img'] + 'win/molodec.svg','ok-text','win',120,70,588,82,' ');
+        this.items.push(bg);
 
-        let repeat_btn = new BaseSprite(this.game.settings['path']['img'] + 'win/repeat-btn.svg','repeat-btn','win',repeatBtnX,repeatBtnY,135,130,' ');
-		let arrow = new BaseSprite(this.game.settings['path']['img'] + 'win/arrow.svg','arrow','win',repeatBtnX - 100,repeatBtnY + 100,90,91,' ');
-			
-	    this.items.push(bg);
-	    this.items.push(hero_win);
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
+        }
+
+		let win_text = new BaseSprite(this.game.settings['path']['img'] + 'win/molodec.svg','ok-text','win',120,70,588,82,' ');
+        let repeat_btn = new BaseSprite(this.game.settings.path.img + 'start/play-btn.svg','repeat-btn','win',repeatBtnX,repeatBtnY,135,130,' ');
+        let arrow = new BaseSprite(this.game.settings['path']['img'] + 'win/arrow.svg','arrow','win',repeatBtnX - 100,repeatBtnY + 100,90,91,' ');
+
 	    this.items.push(win_text);
 	    this.items.push(repeat_btn);
 	    this.items.push(arrow);
@@ -56,9 +60,11 @@ export default class MainScreen extends GameScreen{
                 this.items[i].isShow){
 
                     this.game.reset();
-					this.game.screens[1].initScene();
-					this.game.screens[1].setTimer();
-					this.game.showScreen(2,1);
+
+                    let screen = this.game.getScreenByName('game');
+					screen.initScene();
+					screen.setTimer();
+					this.game.showScreenByName('game');
             }
         }
        

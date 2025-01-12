@@ -23,6 +23,7 @@ export class MainScreen extends GameScreen{
         this.bg = bgImg;
         this.cardManager = new CardManager();
         this.defaultCard = new DefaultCard();
+        this.name = 'game';
 
     }
 

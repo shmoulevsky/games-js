@@ -5,7 +5,7 @@ import gsap from "gsap";
 // основной класс игры
 export default class StartScreen extends GameScreen{
 		
-    constructor(bgImg, game){
+    constructor(bgImg, game, hero){
         super();
 
 
@@ -14,6 +14,8 @@ export default class StartScreen extends GameScreen{
         this.height = game.settings.height;
         this.game = game;
         this.bg = bgImg;
+        this.hero = hero;
+        this.name = 'start';
         this.title = game.settings.title ?? '';
         this.titleX = 80;
         this.titleY = (game.settings.height / 2) - 50;
@@ -37,6 +39,12 @@ export default class StartScreen extends GameScreen{
 		let arrow = new BaseSprite(this.game.settings.path.img + 'win/arrow.svg','arrow','win',arrowX,arrowY,90,91,' ');
 
         this.items.push(bg);
+
+        if(this.hero){
+            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            this.items.push(hero);
+        }
+
 	    this.items.push(btn);
 	    this.items.push(arrow);
 	        
