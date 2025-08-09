@@ -5,6 +5,7 @@ import StartScreen from "./Screens/StartScreen";
 import SettingsScreen from "./Screens/SettingsScreen";
 import ResultScreen from "./Screens/ResultScreen";
 import MainScreenFactory from "./MainScreenFactory";
+import settingsScreens from "lodash/_SetCache";
 
 export default class GameManager{
 
@@ -19,13 +20,19 @@ export default class GameManager{
         let settingsScreen = null
         let startScreen = new StartScreen(bg, game, hero);
 
+
         let mainScreenFactory = new MainScreenFactory();
         let mainScreen = mainScreenFactory.make(code, bg, game, hero);
         mainScreen.isShow = false;
 
+        let settingsScreens = [];
+
         if (options){
-            settingsScreen = new SettingsScreen(bg, game, 'Настройки', options);
-            settingsScreen.isShow = false;
+            for (let key in options) {
+                settingsScreen = new SettingsScreen(bg, game, hero, 'Настройки', options[key], parseInt(key)+2);
+                settingsScreen.isShow = false;
+                settingsScreens.push(settingsScreen);
+            }
         }
 
         startScreen.isShow = true;
@@ -37,11 +44,12 @@ export default class GameManager{
         startScreen.initScene();
         resultScreen.initScene();
 
-
         game.screens.push(startScreen);
 
         if (options){
-            game.screens.push(settingsScreen);
+            for (let key in settingsScreens) {
+                game.screens.push(settingsScreens[key]);
+            }
         }
 
         game.screens.push(mainScreen);

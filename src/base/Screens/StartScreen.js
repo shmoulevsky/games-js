@@ -1,6 +1,8 @@
 import GameScreen from './GameScreen'
 import BaseSprite from '../Images/BaseSprite'
 import gsap from "gsap";
+import ColorfulText from "../UI/ColorfulText";
+import Translation from "../Translations/Translation";
 
 // основной класс игры
 export default class StartScreen extends GameScreen{
@@ -19,7 +21,7 @@ export default class StartScreen extends GameScreen{
         this.title = game.settings.title ?? '';
         this.titleX = 80;
         this.titleY = (game.settings.height / 2) - 50;
-
+        this.translation = new Translation()
         
     }
 
@@ -40,14 +42,44 @@ export default class StartScreen extends GameScreen{
 
         this.items.push(bg);
 
+        let hero = {}
+
         if(this.hero){
-            let hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
+            hero = new BaseSprite( this.game.settings.path.img + this.hero.path,'hero','hero',this.hero.x,this.hero.y,this.hero.width,this.hero.height,' ');
             this.items.push(hero);
+            this.tweens['tweenHero'] = gsap.to(hero, {_y : this.game.getScaled(hero._y - 50), duration : 3, repeat: -1, yoyo:true});
         }
 
 	    this.items.push(btn);
 	    this.items.push(arrow);
-	        
+
+        const titleText = new ColorfulText('gradient', 400, 200, 'Math-Owl.com', {
+            fontSize: 60,
+            color: '#ffffff',
+            fontWeight: 'bold',
+            //gradientColors: ['#ffffff', 'rgba(26,99,232,0.5)', '#45b7d1'],
+            //gradientDirection: 'horizontal',
+            glowColor: '#f8ff5c',
+            glowBlur: 20,
+            float: true,
+            canDrag: false,
+            floatAmplitude: 10,
+            floatSpeed: 0.025
+        });
+
+        // Радужный пульсирующий перетаскиваемый текст
+        const interactiveText = new ColorfulText('interactive', 500, 600, this.translation.make(this.game.settings.lang, 'play'), {
+            fontSize: 36,
+            fontWeight: 'bold',
+            pulse: true,
+            pulseMin: 0.8,
+            pulseMax: 1.2,
+            canDrag: false
+        });
+
+        this.items.push(titleText);
+        this.items.push(interactiveText);
+
 	    this.tweens['tweenArrowWin'] = gsap.to(arrow, {_y : this.game.getScaled(btnY + 50), duration : 1, repeat: -1, yoyo:true});
         this.scale(this.game.scale);
     }

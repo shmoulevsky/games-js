@@ -1,7 +1,26 @@
 const path = require('path');
 
+const gamesData = require('./public/games.json'); // предполагаем, что JSON находится в файле games.json
+
+// Создаем объект entry динамически на основе данных из JSON
+const createEntryPoints = () => {
+    const entries = {};
+
+    gamesData.forEach(game => {
+        entries[`js/games/${game.code}/bundle`] = `./src/games/${game.code}/main.js`;
+    });
+
+    return entries;
+};
+
 module.exports = {
-  mode: "development", // could be "production" as well
+  mode: "development",
+  //mode: "production",
+  performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+  },
   devServer: {
     static: {
       directory: path.join(__dirname, 'public'),
@@ -13,32 +32,10 @@ module.exports = {
       '/api' : 'http://127.100.100.150'
     },
   },
-  entry: {
-    'js/games/primery/plus/bundle' : './src/Primery/plus/main.js',
-    'js/games/primery/multy/bundle' : './src/Primery/multy/main.js',
-    'js/games/primery/color/bundle' : './src/Primery/color/main.js',
-    'js/games/denesh/find/bundle' : './src/Denesh/find/main.js',
-    'js/games/denesh/findAll/bundle' : './src/Denesh/findAll/main.js',
-    'js/games/quicksort/figurs/bundle' : './src/QuickSort/figurs/main.js',
-    'js/games/shulte/simple/bundle' : './src/Shulte/simple/main.js',
-    'js/games/shulte/digits/bundle' : './src/Shulte/digits/main.js',
-    'js/games/memory/simple/bundle' : './src/Memory/simple/main.js',
-    'js/games/sort/figurs/bundle' : './src/Sort/figurs/main.js',
-    'js/games/sort/digits/bundle' : './src/Sort/digits/main.js',
-    'js/games/series/find/bundle' : './src/Series/find/main.js',
-    'js/games/series/digits/bundle' : './src/Series/digits/main.js',
-    'js/games/count/simple/bundle' : './src/Count/simple/main.js',
-    'js/games/find-all/letters/bundle' : './src/FindAll/letters/main.js',
-    'js/games/memory/pair/bundle' : './src/Memory/pair/main.js',
-    'js/games/turtle/simple/bundle' : './src/Turtle/simple/main.js',
-    'js/games/turtle/map/bundle' : './src/Turtle/map/main.js',
-    'js/games/world/map/bundle' : './src/World/map/main.js',
-    'js/games/order/simple/bundle' : './src/Order/simple/main.js',
-    'js/games/dots/simple/bundle' : './src/Dots/simple/main.js',
-  },
+  entry: createEntryPoints(),
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js'
   },
-  watch: true
+  watch: true,
 };

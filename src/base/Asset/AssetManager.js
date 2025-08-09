@@ -25,7 +25,8 @@ export default class AssetManager{
         ]
 
         this.backgrounds = {
-            'sea' : ['01.svg', '002.png'],
+            'bg' : ['01.svg', '02.svg', '03.svg', '04.svg', '05.svg', '06.svg', '07.svg'],
+            'sea' : ['01.svg', '02.svg'],
             'forest' : ['01.svg', '02.png'],
             'desert' : ['01.svg', '01.svg'],
             'cosmos' : ['01.svg', '01.svg'],
@@ -35,6 +36,15 @@ export default class AssetManager{
         }
 
         this.heros = {
+            'bg' : [
+                {path : 'rubber2.svg', width: 231, height: 426, offsetX: 0, offsetY: 0},
+                {path : 'ruller.svg', width: 132, height: 495, offsetX: 0, offsetY: 0},
+                {path : 'compass.svg', width: 167, height: 430, offsetX: 0, offsetY: 0},
+                {path : 'pencil.svg', width: 108, height: 348, offsetX: 0, offsetY: 0},
+                {path : 'circle.svg', width: 243, height: 244, offsetX: 0, offsetY: 0},
+                {path : 'square.svg', width: 243, height: 244, offsetX: 0, offsetY: 0},
+                {path : 'triangle.svg', width: 243, height: 244, offsetX: 0, offsetY: 0},
+            ],
             'sea' : [
                 {path : 'turtle.svg', width: 370, height: 367, offsetX: 0, offsetY: 0},
                 {path : 'turtle2.svg', width: 375, height: 370, offsetX: 0, offsetY: 0}

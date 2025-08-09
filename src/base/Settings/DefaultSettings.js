@@ -19,7 +19,8 @@ export default class DefaultSettings{
         }
 
         this.title = outerParams?.title ?? '';
-        this.lang = outerParams?.lang ?? '';
+        this.lang = localStorage.getItem('lang') ?? outerParams?.lang ?? 'en';
         this.user = outerParams?.user ?? '';
+        this.options = outerParams?.options ?? [];
     }
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="243"
+   height="244"
+   viewBox="0 0 64.293748 64.558333"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (2aeb623e1d, 2025-05-12)"
+   sodipodi:docname="circle.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="0.94363241"
+     inkscape:cx="-15.89602"
+     inkscape:cy="50.337398"
+     inkscape:window-width="1920"
+     inkscape:window-height="954"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g2" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-122.45784,-154.25258)">
+    <g
+       id="g2"
+       transform="matrix(0.55230844,0,0,0.55428721,102.08228,105.5298)">
+      <ellipse
+         style="fill:#ff4242;fill-opacity:1;stroke:none;stroke-width:0.264441;stroke-linejoin:round"
+         id="path5"
+         cx="93.750206"
+         cy="144.05142"
+         rx="50.766586"
+         ry="51.597061"
+         transform="translate(-2.50174e-8)" />
+      <path
+         d="m 92.028683,108.91546 c 0,0 -14.549651,-2.13013 -16.514594,1.06797 -1.964944,3.19803 -2.171642,4.71436 -0.315637,5.68354 7.72142,4.03198 23.865448,-1.71856 16.830231,-6.75151 z"
+         fill="#0f0f0f"
+         stroke="#000000"
+         stroke-opacity="0.956956"
+         stroke-width="1.51592"
+         id="path3" />
+      <path
+         d="m 115.13564,119.64429 c 3.6598,-0.64904 -9.46,-13.10876 -11.55488,-11.23903 -5.59383,6.57959 8.02294,15.32316 11.55488,11.23903 z"
+         fill="#0f0f0f"
+         stroke="#000000"
+         stroke-opacity="0.956956"
+         stroke-width="1.51592"
+         id="path4" />
+      <path
+         d="m 95.83344,127.10019 c -0.27497,5.72621 -0.18275,13.7408 -5.990479,13.64739 -6.022225,-0.097 -12.813616,2.54225 -14.805792,-9.60628 -0.906845,-5.52998 6.097172,-11.16896 12.120144,-11.16896 6.022897,0 8.945107,1.52786 8.676127,7.12785 z"
+         fill="#ffffff"
+         id="path9"
+         style="stroke-width:0.757961" />
+      <path
+         d="m 93.05124,132.9101 c 0.27498,5.72619 2.00478,10.45353 7.8125,10.36006 6.02215,-0.097 12.59447,2.50281 14.80573,-9.6062 1.05682,-5.78707 -5.02371,-13.00899 -12.12007,-11.16904 -5.83714,1.51345 -10.76705,4.81516 -10.49816,10.41518 z"
+         fill="#ffffff"
+         id="path10"
+         style="stroke-width:0.757961" />
+      <path
+         d="m 98.08086,134.16972 c 1.89292,0 3.42751,-1.3885 3.42751,-3.1013 0,-1.71289 -1.53459,-3.10141 -3.42751,-3.10141 -1.89292,0 -3.42751,1.38852 -3.42751,3.10141 0,1.7128 1.53459,3.1013 3.42751,3.1013 z"
+         fill="#0f0f0f"
+         stroke="#000000"
+         stroke-opacity="0.956956"
+         stroke-width="1.51592"
+         id="path12" />
+      <path
+         d="m 89.638914,132.78932 c 1.892915,0 3.427506,-1.38847 3.427506,-3.10128 0,-1.7129 -1.534591,-3.1014 -3.427506,-3.1014 -1.892919,0 -3.42751,1.3885 -3.42751,3.1014 0,1.71281 1.534591,3.10128 3.42751,3.10128 z"
+         fill="#0f0f0f"
+         stroke="#000000"
+         stroke-opacity="0.956956"
+         stroke-width="1.51592"
+         id="path12-3" />
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-linejoin:round"
+         d="m 72.267925,150.31761 c -2.82136,23.83632 44.670635,9.90254 41.497455,6.72931 -0.32255,-0.32255 -35.82426,9.82143 -41.497455,-6.72931 z"
+         id="path1"
+         sodipodi:nodetypes="csc" />
+    </g>
+  </g>
+</svg>

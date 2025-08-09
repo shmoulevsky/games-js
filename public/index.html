@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="style.css" />
-  <title>Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>Game</title>
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <ol>
-                    <li><a href="/primery/plus">Сложение</a><br/></li>
-                    <li><a href="/primery/multy">Умножение</a><br/></li>
-                    <li><a href="/denesh/find">Блоки Дьенеша</a><br/></li>
-                    <li><a href="/denesh/findAll">Блоки Дьенеша 2</a><br/></li>
-                    <li><a href="/quicksort/figurs">Быстрая сортировка</a><br/></li>
-                    <li><a href="/shulte/simple">Таблица Шульте символы</a><br/></li>
-                    <li><a href="/shulte/digits">Таблица Шульте</a><br/></li>
-                    <li><a href="/memory/simple">Найди по памяти</a><br/></li>
-                    <li><a href="/sort/figurs">Рассели по домикам</a><br/></li>
-                    <li><a href="/series/find">Найди недостающую фигуру</a><br/></li>
-                    <li><a href="/series/digits">Найди недостающее число</a><br/></li>
-                    <li><a href="/count/simple">Сосчитакй-ка</a><br/></li>
-                    <li><a href="/primery/color">Цветной счет</a><br/></li>
-                    <li><a href="/sort/digits">Реши примеры</a><br/></li>
-                    <li><a href="/find-all/letters">Найди все буквы</a><br/></li>
-                    <li><a href="/memory/pair">Мемо</a><br/></li>
-                    <li><a href="/turtle/simple">Черепашка</a><br/></li>
-                    <li><a href="/turtle/map">Остров сокровищь</a><br/></li>
-                    <li><a href="/world/map">Страна Математики</a><br/></li>
-                    <li><a href="/order/simple">Расставь по порядку 0-10</a><br/></li>
-                    <li><a href="/dots/simple">Расставь точки по образцу</a><br/></li>
-                </ol>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <ol id="games-list"></ol>
         </div>
     </div>
+</div>
 
+<script>
+    fetch('/games.json')  // Обратите внимание на слеш в начале
+        .then(response => {
+            if (!response.ok) throw new Error('Ошибка загрузки');
+            return response.json();
+        })
+        .then(gamesData => {
+            const gamesList = document.getElementById('games-list');
+            gamesList.innerHTML = gamesData.map(game => `
+      <li>
+        <a href="/games/?code=${game.code}">${game.title}</a><br/>
+      </li>
+    `).join('');
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            document.getElementById('games-list').innerHTML = `
+      <li class="text-danger">Не удалось загрузить список игр</li>
+    `;
+        });
+</script>
 </body>
 </html>

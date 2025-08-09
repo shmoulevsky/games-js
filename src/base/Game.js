@@ -1,5 +1,3 @@
-import UIManager from "./UI/UIManager";
-
 export default class Game{
 		
     constructor(width, height, id, helper, uiManager) {
@@ -27,8 +25,7 @@ export default class Game{
       this.settings['minutes'] = 2;
       this.settings['path']['img'] = '';
       this.settings['path']['snd'] = '';
-      
-      
+
       this.player = null;
       this.ai = null;
       
@@ -163,6 +160,13 @@ export default class Game{
         
     }
 
+    showScreenByKey(dest){
+
+        this.screens.map(item =>  item.isShow = false);
+        this.screens[dest].isShow = true;
+
+    }
+
     showScreenByName(name){
         for(let i=0;i<this.screens.length;i++){
             this.screens[i].isShow = this.screens[i]?.name === name;
@@ -219,13 +223,13 @@ export default class Game{
 
         this.ctx.clearRect(0, 0, 1024, 700);
 
-         for(var i=0;i<this.screens.length;i++)
+         for(let i=0; i<this.screens.length; i++)
          {
              if(this.screens[i].isShow)
              {
-                 for(var j=0;j<this.screens[i].items.length;j++)
+                 for(let j=0; j<this.screens[i].items.length; j++)
                  {
-                     if(this.screens[i].items[j].isShow == true)
+                     if(this.screens[i].items[j].isShow === true)
                      {
                          this.screens[i].items[j].draw(this.ctx);
                          
